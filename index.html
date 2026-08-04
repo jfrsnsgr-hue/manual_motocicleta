@@ -1,0 +1,2464 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual del Conductor — Educación Vial Costa Rica</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Source+Serif+4:opsz,wght@8..60,300;8..60,400;8..60,600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════
+   ROOT & TOKENS
+═══════════════════════════════════════════════════ */
+:root {
+  --ink:        #1c1a17;
+  --ink-muted:  #5c5750;
+  --ink-faint:  #9a9490;
+  --paper:      #f7f4ef;
+  --paper-warm: #ede9e2;
+  --paper-card: #ffffff;
+  --accent:     #c0392b;
+  --accent-2:   #2c6e49;
+  --accent-3:   #1a4a7a;
+  --gold:       #b8860b;
+  --border:     #d9d3c8;
+  --sidebar-w:  280px;
+
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body:    'Source Serif 4', Georgia, serif;
+  --font-mono:    'JetBrains Mono', monospace;
+
+  --shadow-sm:  0 1px 4px rgba(28,26,23,.08);
+  --shadow-md:  0 4px 20px rgba(28,26,23,.12);
+  --shadow-lg:  0 12px 48px rgba(28,26,23,.18);
+
+  --r: 6px;
+}
+
+/* ═══════════════════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  font-family: var(--font-body);
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.75;
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ═══════════════════════════════════════════════════
+   SIDEBAR
+═══════════════════════════════════════════════════ */
+#sidebar {
+  width: var(--sidebar-w);
+  height: 100vh; 
+  background: var(--ink);
+  position: fixed;
+  top: 0; left: 0;
+  overflow-y: auto; 
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 2rem;
+  transition: transform .3s ease;
+}
+#sidebar::-webkit-scrollbar { width: 4px; }
+#sidebar::-webkit-scrollbar-thumb { background: #444; border-radius: 2px; }
+
+#sidebar .sb-section:last-of-type {
+  margin-bottom: 2rem;
+}
+
+/* Esto fuerza el scroll si el contenido excede la altura */
+#sidebar .sb-section {
+  flex-shrink: 0;
+}
+
+.sb-brand {
+  padding: 1.5rem 1.25rem 1rem;
+  border-bottom: 1px solid rgba(255,255,255,.1);
+}
+.sb-brand-flag {
+  display: flex; gap: 3px; margin-bottom: .5rem;
+}
+.sb-brand-flag span {
+  height: 5px; border-radius: 2px; flex: 1;
+}
+.sb-brand h2 {
+  font-family: var(--font-display);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+.sb-brand p {
+  font-size: .72rem;
+  color: rgba(255,255,255,.45);
+  margin-top: .25rem;
+  font-family: var(--font-mono);
+  letter-spacing: .05em;
+}
+
+.sb-section {
+  padding: .5rem 0;
+  border-bottom: 1px solid rgba(255,255,255,.07);
+}
+.sb-section-label {
+  font-size: .65rem;
+  font-family: var(--font-mono);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.3);
+  padding: .75rem 1.25rem .25rem;
+}
+.sb-link {
+  display: block;
+  padding: .45rem 1.25rem;
+  color: rgba(255,255,255,.65);
+  text-decoration: none;
+  font-size: .82rem;
+  font-family: var(--font-body);
+  line-height: 1.4;
+  transition: all .15s;
+  border-left: 2px solid transparent;
+}
+.sb-link:hover, .sb-link.active {
+  color: #fff;
+  background: rgba(255,255,255,.06);
+  border-left-color: var(--accent);
+}
+
+/* Mobile toggle */
+#menu-toggle {
+  display: none;
+  position: fixed;
+  top: 1rem; left: 1rem;
+  z-index: 300;
+  background: var(--ink);
+  color: #fff;
+  border: none;
+  padding: .5rem .75rem;
+  border-radius: var(--r);
+  cursor: pointer;
+  font-size: 1.1rem;
+}
+
+/* ═══════════════════════════════════════════════════
+   MAIN CONTENT
+═══════════════════════════════════════════════════ */
+#main {
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  max-width: 820px;
+  padding: 3rem 3rem 6rem;
+}
+
+/* ═══════════════════════════════════════════════════
+   HERO
+═══════════════════════════════════════════════════ */
+.hero {
+  background: var(--ink);
+  color: #fff;
+  border-radius: 12px;
+  padding: 3.5rem 3rem;
+  margin-bottom: 3rem;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 40px,
+    rgba(255,255,255,.02) 40px,
+    rgba(255,255,255,.02) 41px
+  );
+}
+.hero-flag {
+  display: flex; gap: 4px; margin-bottom: 1.5rem; position: relative;
+}
+.hero-flag span { height: 6px; border-radius: 3px; }
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  background: rgba(192,57,43,.3);
+  border: 1px solid rgba(192,57,43,.5);
+  color: #f7b8b2;
+  font-size: .72rem;
+  font-family: var(--font-mono);
+  letter-spacing: .08em;
+  padding: .25rem .75rem;
+  border-radius: 20px;
+  margin-bottom: 1rem;
+  position: relative;
+}
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  line-height: 1.1;
+  font-weight: 900;
+  margin-bottom: .75rem;
+  position: relative;
+}
+.hero p {
+  font-size: 1.05rem;
+  color: rgba(255,255,255,.65);
+  max-width: 520px;
+  position: relative;
+}
+.hero-meta {
+  display: flex;
+  gap: 2rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255,255,255,.1);
+  position: relative;
+}
+.hero-stat { text-align: left; }
+.hero-stat strong { display: block; font-size: 1.6rem; font-family: var(--font-display); color: #fff; }
+.hero-stat span   { font-size: .75rem; color: rgba(255,255,255,.45); font-family: var(--font-mono); letter-spacing: .05em; }
+
+/* ═══════════════════════════════════════════════════
+   CHAPTER SECTIONS
+═══════════════════════════════════════════════════ */
+.chapter {
+  margin-bottom: 4rem;
+  scroll-margin-top: 1.5rem;
+}
+.chapter-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--border);
+}
+.chapter-num {
+  font-family: var(--font-mono);
+  font-size: .7rem;
+  font-weight: 600;
+  letter-spacing: .12em;
+  color: var(--accent);
+  background: rgba(192,57,43,.08);
+  padding: .3rem .6rem;
+  border-radius: 4px;
+  white-space: nowrap;
+  margin-top: .35rem;
+}
+.chapter-icon {
+  width: 42px; height: 42px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.35rem;
+  flex-shrink: 0;
+}
+.chapter h2 {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--ink);
+}
+.chapter h3 {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 1.5rem 0 .6rem;
+  color: var(--ink);
+}
+.chapter h4 {
+  font-family: var(--font-body);
+  font-size: .92rem;
+  font-weight: 600;
+  margin: 1rem 0 .4rem;
+  color: var(--accent-3);
+  letter-spacing: .02em;
+}
+.chapter p {
+  font-size: .95rem;
+  margin-bottom: .85rem;
+  color: var(--ink);
+}
+
+/* ═══════════════════════════════════════════════════
+   CALLOUTS
+═══════════════════════════════════════════════════ */
+.callout {
+  border-radius: var(--r);
+  padding: 1rem 1.1rem 1rem 1.25rem;
+  margin: 1.25rem 0;
+  font-size: .9rem;
+  border-left: 3px solid;
+  line-height: 1.6;
+  position: relative;
+}
+.callout-label {
+  font-size: .68rem;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: .3rem;
+}
+.callout-warn  { background: #fffbec; border-color: var(--gold); }
+.callout-warn .callout-label  { color: var(--gold); }
+.callout-tip   { background: #edf7f1; border-color: var(--accent-2); }
+.callout-tip .callout-label   { color: var(--accent-2); }
+.callout-danger{ background: #fdf0ef; border-color: var(--accent); }
+.callout-danger .callout-label{ color: var(--accent); }
+.callout-info  { background: #eef4fb; border-color: var(--accent-3); }
+.callout-info .callout-label  { color: var(--accent-3); }
+
+/* ═══════════════════════════════════════════════════
+   TABLES
+═══════════════════════════════════════════════════ */
+.tbl-wrap { overflow-x: auto; margin: 1.25rem 0; border-radius: var(--r); box-shadow: var(--shadow-sm); }
+table { width: 100%; border-collapse: collapse; font-size: .875rem; }
+thead th {
+  background: var(--ink);
+  color: #fff;
+  padding: .65rem .85rem;
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: .72rem;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+tbody tr { border-bottom: 1px solid var(--border); }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:nth-child(even) td { background: rgba(0,0,0,.018); }
+tbody td { padding: .6rem .85rem; vertical-align: top; color: var(--ink); line-height: 1.55; }
+.tag {
+  display: inline-block;
+  font-size: .72rem;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  padding: .1rem .5rem;
+  border-radius: 3px;
+}
+.tag-red   { background: #fde8e7; color: #a93226; }
+.tag-blue  { background: #ddeaf9; color: #154a78; }
+.tag-green { background: #d5ede0; color: #1a5c35; }
+.tag-amber { background: #fef3cd; color: #7d5a00; }
+.tag-gray  { background: #eee;    color: #555; }
+
+/* ═══════════════════════════════════════════════════
+   CARDS
+═══════════════════════════════════════════════════ */
+.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin: 1rem 0; }
+.card {
+  background: var(--paper-card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: .9rem .85rem;
+  box-shadow: var(--shadow-sm);
+}
+.card-number {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: .2rem;
+}
+.card-unit { font-size: .75rem; color: var(--ink-muted); margin-bottom: .3rem; font-family: var(--font-mono); }
+.card-desc { font-size: .8rem; line-height: 1.4; color: var(--ink); }
+
+/* ═══════════════════════════════════════════════════
+   LISTS
+═══════════════════════════════════════════════════ */
+.def-list { margin: .75rem 0 1rem; padding: 0; list-style: none; }
+.def-list li { padding: .45rem 0; border-bottom: 1px dashed var(--border); font-size: .9rem; line-height: 1.55; }
+.def-list li:last-child { border-bottom: none; }
+.def-list li strong { color: var(--ink); font-weight: 600; }
+
+.ul-styled { padding-left: 1.4rem; margin: .5rem 0 1rem; }
+.ul-styled li { margin-bottom: .45rem; font-size: .92rem; line-height: 1.6; }
+
+.step-list { counter-reset: step; padding: 0; list-style: none; margin: .75rem 0 1rem; }
+.step-list li {
+  counter-increment: step;
+  display: flex;
+  gap: .75rem;
+  align-items: flex-start;
+  margin-bottom: .65rem;
+  font-size: .9rem;
+  line-height: 1.6;
+}
+.step-list li::before {
+  content: counter(step);
+  min-width: 24px; height: 24px;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .7rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* ═══════════════════════════════════════════════════
+   TWO-COL
+═══════════════════════════════════════════════════ */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 1rem 0; }
+@media (max-width: 600px){ .two-col { grid-template-columns: 1fr; } }
+.col-box {
+  background: var(--paper-card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: .9rem 1rem;
+  box-shadow: var(--shadow-sm);
+}
+.col-box h4 { color: var(--accent-3); font-size: .85rem; margin-bottom: .4rem; }
+
+/* ═══════════════════════════════════════════════════
+   HIGHLIGHT BOX
+═══════════════════════════════════════════════════ */
+.hi-box {
+  background: var(--ink);
+  color: #fff;
+  border-radius: 10px;
+  padding: 1.25rem 1.4rem;
+  margin: 1.25rem 0;
+}
+.hi-box h3 {
+  font-size: .72rem;
+  font-family: var(--font-mono);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.45);
+  margin-bottom: .5rem;
+}
+.hi-box ul { padding-left: 1.25rem; }
+.hi-box li { font-size: .88rem; margin-bottom: .3rem; color: rgba(255,255,255,.88); }
+.hi-box p  { font-size: .9rem; color: rgba(255,255,255,.85); margin-bottom: .5rem; }
+
+/* ═══════════════════════════════════════════════════
+   INFRACTION CATEGORIES
+═══════════════════════════════════════════════════ */
+.infraction-block {
+  border-radius: var(--r);
+  padding: 1rem 1.1rem;
+  margin: .75rem 0;
+  border-left: 4px solid;
+}
+.inf-A { background: #fdf0ef; border-color: var(--accent); }
+.inf-B { background: #fef9ec; border-color: var(--gold); }
+.inf-C { background: #edf7f1; border-color: var(--accent-2); }
+.inf-D { background: #eef4fb; border-color: var(--accent-3); }
+.inf-E { background: #f5f5f5; border-color: #999; }
+.inf-label { font-family: var(--font-mono); font-size: .68rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; display: block; margin-bottom: .3rem; }
+
+/* ═══════════════════════════════════════════════════
+   DIVIDER
+═══════════════════════════════════════════════════ */
+.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 2rem 0;
+}
+
+/* ═══════════════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════════════ */
+footer {
+  text-align: center;
+  padding: 2rem 1rem;
+  font-size: .78rem;
+  color: var(--ink-faint);
+  border-top: 1px solid var(--border);
+  font-family: var(--font-mono);
+}
+
+body {
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+.hero h1 em {
+  color: #e85d4a;  /* Rojo más vibrante que combina con el accent */
+  font-style: normal;
+}
+
+/* ═══════════════════════════════════════════════════
+   RESPONSIVE (CORREGIDO)
+═══════════════════════════════════════════════════ */
+@media (max-width: 860px) {
+  #sidebar {
+    transform: translateX(-100%);
+    width: 85%;
+    max-width: 280px;
+    height: 100vh;
+  }
+  #sidebar.open {
+    transform: translateX(0);
+  }
+  #main {
+    margin-left: 0;
+    max-width: 100%;
+    padding: 1.25rem 1rem 4rem;
+    overflow-x: hidden;
+  }
+  #menu-toggle {
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+  }
+  .hero {
+    padding: 1.5rem;
+  }
+  .hero h1 {
+    font-size: 1.6rem;
+  }
+  .hero-meta {
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .hero-stat strong {
+    font-size: 1.2rem;
+  }
+  .chapter-header {
+    gap: 0.6rem;
+  }
+  .chapter h2 {
+    font-size: 1.35rem;
+  }
+  .chapter h3 {
+    font-size: 1rem;
+  }
+  .card-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .two-col {
+    grid-template-columns: 1fr;
+  }
+  /* Permitir scroll horizontal solo en tablas */
+  .tbl-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 1rem -0.5rem;
+    padding: 0 0.5rem;
+  }
+  table {
+    min-width: 500px;
+    font-size: 0.8rem;
+  }
+  /* Ajustar padding general */
+  .chapter {
+    margin-bottom: 2rem;
+  }
+  .callout, .hi-box {
+    padding: 0.8rem;
+  }
+  .def-list li, .ul-styled li {
+    font-size: 0.85rem;
+  }
+}
+@media print {
+  #sidebar, #menu-toggle {
+    display: none !important;
+  }
+  #main {
+    margin-left: 0;
+    max-width: 100%;
+    padding: 1rem;
+  }
+}
+</style>
+</head>
+<body>
+
+<button id="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰ Menú</button>
+
+<!-- ════════════════════════════════════════════════
+     SIDEBAR
+════════════════════════════════════════════════ -->
+<nav id="sidebar">
+  <div class="sb-brand">
+    <div class="sb-brand-flag">
+      <span style="background:#002B7F;flex:2"></span>
+      <span style="background:#fff;flex:1"></span>
+      <span style="background:#C8102E;flex:2"></span>
+    </div>
+    <h2>Manual del Conductor</h2>
+    <p>Educación Vial · Costa Rica</p>
+  </div>
+
+  <div class="sb-section">
+    <div class="sb-section-label">Fundamentos</div>
+    <a class="sb-link" href="#t1">1. Qué es conducir</a>
+    <a class="sb-link" href="#t2">2. Movilidad segura</a>
+    <a class="sb-link" href="#t3">3. Factores de riesgo</a>
+    <a class="sb-link" href="#t4">4. Accidentes de tránsito</a>
+    <a class="sb-link" href="#t5">5. Medios de transporte</a>
+    <a class="sb-link" href="#t6">6. Entorno vial</a>
+  </div>
+  <div class="sb-section">
+    <div class="sb-section-label">Licencias y Documentos</div>
+    <a class="sb-link" href="#t7">7. Licencia de conducir</a>
+    <a class="sb-link" href="#t8">8. Documentos obligatorios</a>
+    <a class="sb-link" href="#t9">9. Placas y distintivos</a>
+  </div>
+  <div class="sb-section">
+    <div class="sb-section-label">Conducción</div>
+    <a class="sb-link" href="#t10">10. Convivencia en la vía</a>
+    <a class="sb-link" href="#t11">11. Conducción inteligente</a>
+    <a class="sb-link" href="#t12">12. Atención y percepción</a>
+    <a class="sb-link" href="#t13">13. Preparación del viaje</a>
+  </div>
+  <div class="sb-section">
+    <div class="sb-section-label">Señales y Velocidades</div>
+    <a class="sb-link" href="#t14">14. Señales de tránsito</a>
+    <a class="sb-link" href="#t15">15. Límites de velocidad</a>
+  </div>
+  <div class="sb-section">
+    <div class="sb-section-label">El Vehículo</div>
+    <a class="sb-link" href="#t16">16. Mandos y controles</a>
+    <a class="sb-link" href="#t17">17. Visibilidad</a>
+    <a class="sb-link" href="#t18">18. Las llantas</a>
+    <a class="sb-link" href="#t19">19. Los frenos</a>
+    <a class="sb-link" href="#t20">20. Tipos de transmisión</a>
+    <a class="sb-link" href="#t21">21. Mantenimiento preventivo</a>
+    <a class="sb-link" href="#t22">22. Mantenimiento correctivo</a>
+  </div>
+  <div class="sb-section">
+    <div class="sb-section-label">Maniobras</div>
+    <a class="sb-link" href="#t23">23. Maniobras al conducir</a>
+    <a class="sb-link" href="#t24">24. Conducción en la vía</a>
+    <a class="sb-link" href="#t25">25. Finalización del viaje</a>
+  </div>
+  <div class="sb-section">
+    <div class="sb-section-label">Seguridad y Leyes</div>
+    <a class="sb-link" href="#t26">26. Peligros en la vía</a>
+    <a class="sb-link" href="#t27">27. Exigencias del conductor</a>
+    <a class="sb-link" href="#t28">28. Sistemas de protección</a>
+    <a class="sb-link" href="#t29">29. Factores de riesgo</a>
+    <a class="sb-link" href="#t30">30. Comportamiento ante accidentes</a>
+    <a class="sb-link" href="#t31">31. Leyes de movilidad</a>
+  </div>
+</nav>
+
+<!-- ════════════════════════════════════════════════
+     MAIN
+════════════════════════════════════════════════ -->
+<main id="main">
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-flag">
+    <span style="background:#002B7F;flex:2"></span>
+    <span style="background:#fff;flex:1"></span>
+    <span style="background:#C8102E;flex:2"></span>
+  </div>
+  <div class="hero-badge">📚 Guía Oficial de Educación Vial</div>
+ <h1>Manual del<br><em>Conductor</em></h1>
+  <p>Todo lo que necesitás saber para circular con seguridad, responsabilidad y conciencia por las vías públicas del país.</p>
+  <div class="hero-meta">
+    <div class="hero-stat"><strong>31</strong><span>TEMAS</span></div>
+    <div class="hero-stat"><strong>Ley 9078</strong><span>REFERENCIA LEGAL</span></div>
+    <div class="hero-stat"><strong>COSEVI</strong><span>AUTORIDAD VIAL</span></div>
+  </div>
+</section>
+
+<!-- ════════════════════ TEMA 1 ════════════════════ -->
+<section class="chapter" id="t1">
+  <div class="chapter-header">
+    <div class="chapter-icon" style="background:#dce8ff">🧠</div>
+    <div>
+      <span class="chapter-num">TEMA 01</span>
+      <h2>Qué es conducir</h2>
+    </div>
+  </div>
+
+  <h3>1. La conducción y la seguridad vial</h3>
+  <p>Conducir consiste en operar un vehículo por las vías públicas con plena conciencia de que la seguridad de todas las personas que comparten ese espacio es la prioridad absoluta. Las carreteras y caminos son un recurso colectivo donde conviven automóviles, motociclistas, ciclistas, peatones, vehículos de carga y de emergencia, y el tren; todos con los mismos derechos y obligaciones dentro de un marco de respeto mutuo.</p>
+
+  <h3>2. Tipos de conductor</h3>
+  <p>La legislación de tránsito clasifica a quienes conducen en cuatro perfiles, cada uno con responsabilidades específicas:</p>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Tipo</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td><span class="tag tag-blue">Novato</span></td><td>Quien obtiene su licencia por primera vez y no ha superado los tres años de haberla obtenido. Aplica para licencias A, B1 y D durante ese período.</td></tr>
+        <tr><td><span class="tag tag-amber">Profesional</span></td><td>Persona cuya actividad laboral principal es conducir vehículos de carga o pasajeros. Requiere licencia B-3, B-4, C, D o E, o bien la licencia A-2/A-3/B-1/B-2 con el agregado "P".</td></tr>
+        <tr><td><span class="tag tag-gray">No tipificado</span></td><td>Conductor habitual que renueva su licencia (más de tres años vigente) y no ejerce la conducción como profesión. Se acredita con licencias A, B1 o B2.</td></tr>
+        <tr><td><span class="tag tag-red">No acreditado</span></td><td>Persona que conduce sin estar debidamente inscrita o que utiliza un vehículo para el que no posee el tipo de licencia requerido.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>3. Glosario esencial</h3>
+  <p>La Ley de Tránsito define una terminología precisa que todo conductor debe conocer. Los términos más importantes incluyen:</p>
+  <ul class="def-list">
+    <li><strong>Accidente de tránsito:</strong> Acción culposa de conductores, pasajeros o peatones que involucra al menos un vehículo y produce daños materiales, lesiones o fallecimiento.</li>
+    <li><strong>Acera:</strong> Zona de la vía reservada exclusivamente para el tránsito peatonal.</li>
+    <li><strong>Alcoholimetría:</strong> Análisis bioquímico para medir la concentración de alcohol en sangre o en el aire espirado.</li>
+    <li><strong>Autobús:</strong> Vehículo de transporte masivo con capacidad para más de 44 pasajeros sentados.</li>
+    <li><strong>Autopista:</strong> Vía de acceso restringido con cuatro o más carriles de circulación.</li>
+    <li><strong>Calzada:</strong> Superficie de la vía por donde transitan los vehículos, compuesta por uno o varios carriles.</li>
+    <li><strong>COSEVI:</strong> Consejo de Seguridad Vial, ente rector de la seguridad vial en Costa Rica.</li>
+    <li><strong>Espaldón:</strong> Área lateral contigua a la calzada que da soporte al pavimento y sirve como espacio de emergencia.</li>
+    <li><strong>IVE:</strong> Inspección Técnica Vehicular; prueba que certifica el estado mecánico y ambiental del vehículo.</li>
+    <li><strong>Licencia de conducir:</strong> Permiso estatal que autoriza a una persona a conducir un tipo específico de vehículo durante un período determinado.</li>
+    <li><strong>Semáforo:</strong> Dispositivo luminoso que regula el derecho de paso en intersecciones de forma alternativa.</li>
+    <li><strong>SRI:</strong> Sistema de Retención Infantil; conjunto de dispositivos de seguridad para menores de edad.</li>
+    <li><strong>VIN:</strong> Número de identificación vehicular de 17 caracteres, único a nivel mundial.</li>
+    <li><strong>DEV:</strong> Dirección Electrónica Vial; correo electrónico que todo conductor debe registrar ante COSEVI para recibir notificaciones oficiales.</li>
+  </ul>
+
+  <h3>4. La trilogía vial</h3>
+  <div class="hi-box">
+    <h3>Los tres pilares del sistema vial</h3>
+    <ul>
+      <li>🧑 <strong>Factor humano</strong> — conductores, peatones y ciclistas. Es el componente más determinante: el movimiento de todos los vehículos depende de las decisiones humanas.</li>
+      <li>🚗 <strong>El vehículo</strong> — su estado mecánico, mantenimiento y adecuación a las normas.</li>
+      <li>🛣 <strong>La vía y su entorno</strong> — diseño, señalización, condición del pavimento e iluminación.</li>
+    </ul>
+    <p style="margin-top:.75rem">Una falla en cualquiera de estos elementos afecta la circulación segura y eleva el riesgo de accidentes.</p>
+  </div>
+
+  <h3>5. Seguridad vial</h3>
+  <p>La seguridad vial es la disciplina que estudia y aplica medidas para garantizar una circulación fluida y sin siniestros. Sus ocho objetivos fundamentales son:</p>
+  <ol class="step-list">
+    <li>Reducir daños a personas y bienes en la vía pública.</li>
+    <li>Otorgar fluidez al tránsito.</li>
+    <li>Disminuir la contaminación ambiental generada por los vehículos.</li>
+    <li>Proteger y conservar la infraestructura vial.</li>
+    <li>Mantener en buen estado el parque automotor nacional.</li>
+    <li>Reducir el consumo de energía y los costos operativos.</li>
+    <li>Educar a la ciudadanía en el uso correcto de las vías.</li>
+    <li>Capacitar a los funcionarios públicos del área de tránsito.</li>
+  </ol>
+
+  <h3>6. Tránsito vs. transporte</h3>
+  <p><strong>Tránsito</strong> es la acción de desplazarse de un punto a otro; es un concepto más amplio que engloba a toda persona o vehículo en movimiento. <strong>Transporte</strong>, en cambio, se refiere específicamente al traslado de personas o carga. Todo transporte implica tránsito, pero no todo tránsito es transporte.</p>
+
+  <div class="callout callout-info">
+    <span class="callout-label">ℹ Dato histórico</span>
+    El primer automóvil que circuló por San José lo hizo en 1912. El primer Código de Circulación se publicó en 1920, posicionando a Costa Rica como pionera en seguridad vial en Latinoamérica. La normativa actual está contenida en la Ley 9078 del 26 de octubre de 2012.
+  </div>
+</section>
+
+<!-- ════════════════════ TEMA 2 ════════════════════ -->
+<section class="chapter" id="t2">
+  <div class="chapter-header">
+    <div class="chapter-icon" style="background:#d5ede0">🌿</div>
+    <div>
+      <span class="chapter-num">TEMA 02</span>
+      <h2>Movilidad segura y sostenible</h2>
+    </div>
+  </div>
+
+  <p>Moverse es una necesidad humana básica, presente desde la infancia hasta la vejez. Las personas se desplazan para trabajar, estudiar, recrearse, acceder a servicios o simplemente trasladarse de un lugar a otro. La primera y más universal forma de movilidad es caminar: todas las personas somos peatones.</p>
+
+  <h3>Qué es la movilidad segura y sostenible</h3>
+  <p>Este enfoque busca que las personas se desplacen con el máximo nivel de seguridad y el menor impacto ambiental posible. Integra tres dimensiones:</p>
+  <div class="two-col">
+    <div class="col-box">
+      <h4>Seguridad vial</h4>
+      <p style="font-size:.85rem">Prevención de siniestros y reducción de lesiones graves en todas las modalidades de transporte.</p>
+    </div>
+    <div class="col-box">
+      <h4>Salud pública</h4>
+      <p style="font-size:.85rem">Promoción de modos de transporte que reduzcan emisiones contaminantes y mejoren la calidad del aire.</p>
+    </div>
+    <div class="col-box">
+      <h4>Respeto mutuo</h4>
+      <p style="font-size:.85rem">Consideración hacia peatones, ciclistas y usuarios de transporte público en el espacio vial compartido.</p>
+    </div>
+    <div class="col-box">
+      <h4>Eficiencia colectiva</h4>
+      <p style="font-size:.85rem">Minimizar la congestión y optimizar el uso de las vías para el bienestar de toda la sociedad.</p>
+    </div>
+  </div>
+
+  <h3>El enfoque de Sistema Seguro</h3>
+  <p>Este modelo reconoce que el ser humano comete errores. Por eso, propone diseñar vías, vehículos y normativas de manera que los errores no resulten fatales. Sus cinco pilares son:</p>
+  <ol class="step-list">
+    <li>Infraestructura vial segura</li>
+    <li>Vehículos más seguros</li>
+    <li>Usuarios más seguros</li>
+    <li>Mejores políticas en seguridad vial</li>
+    <li>Mejor asistencia a las víctimas</li>
+  </ol>
+
+  <h3>Conducción defensiva</h3>
+  <div class="hi-box">
+    <h3>Principios clave de la conducción defensiva</h3>
+    <ul>
+      <li>Mantener siempre una distancia de seguridad adecuada con el vehículo de adelante.</li>
+      <li>Nunca adelantar en curvas, intersecciones o zonas de visibilidad reducida.</li>
+      <li>Reducir la velocidad al aproximarse a zonas urbanas, escolares o de alta densidad peatonal.</li>
+      <li>Anticipar maniobras revisando continuamente espejos y puntos ciegos.</li>
+      <li>Abstenerse de usar el teléfono u otros dispositivos mientras se conduce.</li>
+    </ul>
+  </div>
+
+  <div class="callout callout-tip">
+    <span class="callout-label">✅ Medidas sostenibles que reducen riesgos</span>
+    Planificar rutas para evitar horas pico reduce la exposición al riesgo. El transporte público disminuye la cantidad de vehículos en circulación. La conducción suave —sin aceleraciones ni frenos bruscos— reduce tanto las emisiones como la probabilidad de siniestros.
+  </div>
+</section>
+
+<!-- ════════════════════ TEMA 3 ════════════════════ -->
+<section class="chapter" id="t3">
+  <div class="chapter-header">
+    <div class="chapter-icon" style="background:#fde8e7">⚠️</div>
+    <div>
+      <span class="chapter-num">TEMA 03</span>
+      <h2>Factores de riesgo</h2>
+    </div>
+  </div>
+
+  <p>Al circular por cualquier vía se está expuesto a circunstancias que aumentan la probabilidad de un accidente. La Organización Mundial de la Salud agrupa estos factores en cuatro categorías principales:</p>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Categoría OMS</th><th>Elementos que incluye</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Exposición al riesgo</strong></td>
+          <td>Ausencia de aceras o ciclovías, tipo de vía, volumen de tránsito, distancias de recorrido, tipo de vehículo.</td>
+        </tr>
+        <tr>
+          <td><strong>Posibilidad de accidente</strong></td>
+          <td>Mal estado de las carreteras, consumo de alcohol y drogas, exceso de velocidad, distracciones, fatiga, irrespeto al señalamiento vial.</td>
+        </tr>
+        <tr>
+          <td><strong>Gravedad de las lesiones</strong></td>
+          <td>No usar cinturón de seguridad, casco o SRI; diseño de la vía que agrava los impactos.</td>
+        </tr>
+        <tr>
+          <td><strong>Atención post-accidente</strong></td>
+          <td>Demoras en la detección del siniestro, falta de servicios de urgencias, calidad del traslado y rehabilitación.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Factores asociados a la vía</h3>
+  <p>Una infraestructura deficiente incrementa el riesgo. En zonas urbanas, la vía se compone de <strong>acera</strong> (peatones), <strong>calzada</strong> (vehículos), <strong>caño</strong> (drenaje pluvial) y <strong>bordillo</strong>. En vías rurales se añade el <strong>espaldón</strong> y la <strong>cuneta</strong>. Cuando estos elementos faltan o están deteriorados —baches, drenajes obstruidos, señalización deficiente— la exposición al riesgo aumenta considerablemente.</p>
+
+  <h3>Factores asociados al vehículo</h3>
+  <p>Un automóvil con frenos desgastados, neumáticos lisos o sistemas de dirección y suspensión en mal estado aumenta la distancia de frenado y la probabilidad de perder el control. El mantenimiento preventivo y la inspección técnica vehicular periódica son herramientas indispensables.</p>
+  <div class="callout callout-tip">
+    <span class="callout-label">✅ Círculo de seguridad</span>
+    Antes de cada jornada: verificar presión y estado de las llantas, funcionamiento de todas las luces, nivel del silenciador, fluidos del motor y estado de las escobillas.
+  </div>
+
+  <h3>Factores asociados al conductor</h3>
+  <p>La mayoría de los accidentes tienen origen en las decisiones del conductor. El estado físico y mental es determinante: la fatiga, la somnolencia y el consumo de sustancias incrementan el tiempo de reacción. Las emociones intensas —ira, euforia, aburrimiento— también generan conductas de riesgo. La regla es clara: si no estás en condiciones óptimas, no debes conducir.</p>
+
+  <div class="callout callout-danger">
+    <span class="callout-label">🚨 Efecto acumulativo</span>
+    Cuando varios factores de riesgo coinciden, la probabilidad de siniestro crece de forma exponencial. Circular bajo lluvia, con neumáticos desgastados, a exceso de velocidad y con visibilidad reducida multiplica drásticamente el peligro.
+  </div>
+</section>
+
+<!-- ════════════════════ TEMA 4 ════════════════════ -->
+<section class="chapter" id="t4">
+  <div class="chapter-header">
+    <div class="chapter-icon" style="background:#fde8e7">🚨</div>
+    <div>
+      <span class="chapter-num">TEMA 04</span>
+      <h2>Accidentes de tránsito</h2>
+    </div>
+  </div>
+
+  <p>Un accidente de tránsito es una acción culposa cometida por conductores, pasajeros o peatones en las vías públicas. Para que sea tipificado como tal, debe involucrar al menos un vehículo y producir fallecimientos, lesiones o daños materiales derivados de la infracción a la Ley de Tránsito.</p>
+
+  <div class="callout callout-info">
+    <span class="callout-label">ℹ Documentos del siniestro</span>
+    <strong>Croquis:</strong> representación elaborada en el lugar del accidente por las autoridades, que describe las posiciones de los vehículos y elementos relevantes. <strong>Parte oficial:</strong> informe formal de la autoridad que certifica la ocurrencia del siniestro y sirve para establecer responsabilidades.
+  </div>
+
+  <h3>Tipos principales de accidentes</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Tipo</th><th>Descripción</th><th>Causa frecuente</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Colisión</strong></td><td>Choque entre dos o más vehículos, o entre un vehículo y un objeto fijo.</td><td>Distracción, velocidad excesiva, invasión de carril.</td></tr>
+        <tr><td><strong>Vuelco</strong></td><td>El vehículo pierde su posición normal sobre las llantas y se voltea.</td><td>Velocidad en curvas, carga mal distribuida, fuerza centrífuga.</td></tr>
+        <tr><td><strong>Atropello</strong></td><td>Impacto de un vehículo contra una persona o un animal.</td><td>Irrespeto a pasos peatonales, distracción, velocidad excesiva.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Tipos de colisión más comunes</h3>
+  <div class="two-col">
+    <div class="col-box">
+      <h4>Colisión frontal</h4>
+      <p style="font-size:.85rem">Ocurre cuando un vehículo invade el carril contrario al adelantar. Es la más mortal por la suma de velocidades en el impacto.</p>
+    </div>
+    <div class="col-box">
+      <h4>Colisión trasera</h4>
+      <p style="font-size:.85rem">Muy común. Se produce por no respetar la distancia de seguridad, por distracción o por incapacidad de frenar a tiempo.</p>
+    </div>
+    <div class="col-box">
+      <h4>Colisión lateral</h4>
+      <p style="font-size:.85rem">Ocurre cuando un vehículo impacta el costado de otro durante una maniobra de cambio de carril o giro.</p>
+    </div>
+    <div class="col-box">
+      <h4>Declaración de Accidente Menor (DAM)</h4>
+      <p style="font-size:.85rem">Procedimiento simplificado para accidentes con daños materiales únicamente (sin heridos). Permite resolver la situación de forma ágil sin generar congestión.</p>
+    </div>
+  </div>
+
+  <h3>Información a recopilar tras un siniestro</h3>
+  <ol class="step-list">
+    <li>Fotografiar la posición final de los vehículos, la vía y los daños.</li>
+    <li>Anotar datos de contacto de todos los testigos presentes.</li>
+    <li>Registrar nombre, cédula, licencia, placa y aseguradora de las partes involucradas.</li>
+    <li>Si hay heridos: llamar al 9-1-1 inmediatamente e indicar tipo de siniestro, ubicación exacta y estado de las víctimas.</li>
+    <li>No mover los vehículos hasta que lleguen las autoridades, a menos que exista peligro inminente.</li>
+  </ol>
+</section>
+
+<!-- ════════════════════ TEMA 5 ════════════════════ -->
+<section class="chapter" id="t5">
+  <div class="chapter-header">
+    <div class="chapter-icon" style="background:#ddeaf9">🚌</div>
+    <div>
+      <span class="chapter-num">TEMA 05</span>
+      <h2>Medios de transporte en las vías públicas</h2>
+    </div>
+  </div>
+
+  <p>La vía pública es un espacio compartido donde conviven múltiples tipos de vehículos. Conocerlos permite tomar decisiones informadas y prevenir accidentes.</p>
+
+  <h3>Vehículos motorizados</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Categoría</th><th>Ejemplos</th><th>Característica</th></tr></thead>
+      <tbody>
+        <tr><td>Uso personal</td><td>Automóviles (hasta 8 pasajeros), motocicletas, bicimotos, scooters, triciclos, cuadriciclos</td><td>Transporte individual o familiar</td></tr>
+        <tr><td>Transporte público</td><td>Autobuses, busetas, microbuses, taxis</td><td>Cobro de tarifa preestablecida</td></tr>
+        <tr><td>Carga</td><td>Camiones, articulados, grúas, plataformas, cisternas</td><td>Traslado de bienes o materiales</td></tr>
+        <tr><td>Emergencia</td><td>Bomberos, ambulancias, patrullas, motos policiales</td><td>Atención de urgencias; tienen prioridad de paso</td></tr>
+        <tr><td>Especial</td><td>Tractores, cosechadoras, retroexcavadoras, vagonetas</td><td>Uso agrícola, obra civil o industrial</td></tr>
+        <tr><td>Ferroviarios</td><td>Tren</td><td>Circula sobre rieles; tiene prioridad máxima en cruces</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Vehículos no motorizados</h3>
+  <p>Se desplazan mediante tracción humana o animal. Las bicicletas de pedaleo asistido se consideran no motorizadas siempre que su velocidad máxima de asistencia no supere los <strong>25 km/h</strong>.</p>
+
+  <h3>Capacidades y requisitos de licencia</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Vehículo</th><th>Capacidad</th><th>Licencia requerida</th></tr></thead>
+      <tbody>
+        <tr><td>Automóvil particular</td><td>Hasta 8 pasajeros</td><td>B-1</td></tr>
+        <tr><td>Pick-up (carga ligera)</td><td>Carga hasta 4.000 kg</td><td>B-1</td></tr>
+        <tr><td>Microbús</td><td>9 a 25 personas sentadas</td><td>C</td></tr>
+        <tr><td>Buseta</td><td>26 a 44 personas sentadas</td><td>C</td></tr>
+        <tr><td>Autobús</td><td>Más de 44 personas sentadas</td><td>C-2 (mínimo 3 años con B)</td></tr>
+        <tr><td>Vehículo articulado (cabezal)</td><td>Carga pesada ilimitada</td><td>B-4 (22 años + formación especial)</td></tr>
+        <tr><td>Remolque liviano</td><td>PMA máximo 750 kg</td><td>Jalado con B-1</td></tr>
+        <tr><td>UTV (mula)</td><td>Uso agrícola/recreativo</td><td>B-1 en vías no primarias</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ════════════════════ TEMA 6 ════════════════════ -->
+<section class="chapter" id="t6">
+  <div class="chapter-header">
+    <div class="chapter-icon" style="background:#fef3cd">🛣</div>
+    <div>
+      <span class="chapter-num">TEMA 06</span>
+      <h2>Entorno vial</h2>
+    </div>
+  </div>
+
+  <p>El entorno vial comprende toda la infraestructura y los elementos relacionados con los espacios donde se movilizan conductores, peatones y ciclistas. La vía es siempre un espacio compartido.</p>
+
+  <h3>Partes de la vía pública</h3>
+  <ul class="def-list">
+    <li><strong>Calzada:</strong> Espacio destinado a la circulación de vehículos, compuesto por uno o más carriles.</li>
+    <li><strong>Carril de circulación:</strong> Franja de la calzada destinada al tránsito en una sola dirección.</li>
+    <li><strong>Carril central de giro a la izquierda:</strong> Zona de espera central para vehículos que van a girar a la izquierda. Marcado con línea continua exterior y líneas discontinuas interiores. No se usa para adelantar ni para giros en U.</li>
+    <li><strong>Espaldón:</strong> Sección lateral contigua a la calzada; permite el tránsito de peatones y funciona como espacio de emergencia.</li>
+    <li><strong>Aceras:</strong> Zonas reservadas exclusivamente para los peatones.</li>
+    <li><strong>Pasos peatonales:</strong> Espacios demarcados para el cruce seguro de peatones.</li>
+    <li><strong>Ciclovías:</strong> Vías o secciones exclusivas para bicicletas, triciclos no motorizados y, cuando no hay aceras, peatones.</li>
+    <li><strong>Bahías de autobuses:</strong> Espacios apartados para que los autobuses carguen y descarguen pasajeros sin obstaculizar el tránsito.</li>
+    <li><strong>Medianeras y zonas verdes:</strong> Separadores entre carriles de sentidos opuestos.</li>
+    <li><strong>Cuneta / sistema de drenaje:</strong> Canales laterales que permiten el flujo del agua de lluvia.</li>
+    <li><strong>Sistemas de contención:</strong> Barreras metálicas u otros dispositivos para reducir la gravedad de accidentes por salida de la vía.</li>
+  </ul>
+
+  <h3>Tipos de vías en Costa Rica</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Tipo</th><th>Subtipo</th><th>Características</th></tr></thead>
+      <tbody>
+        <tr><td rowspan="3"><strong>Carreteras</strong></td><td>Primarias</td><td>Alto volumen de tránsito; viajes internacionales e interprovinciales.</td></tr>
+        <tr><td>Secundarias</td><td>Conectan cabeceras cantonales; viajes interregionales.</td></tr>
+        <tr><td>Terciarias</td><td>Distribuyen el tránsito entre distritos dentro de una región.</td></tr>
+        <tr><td><strong>Calles</strong></td><td>Locales</td><td>Vías urbanas dentro del cuadrante de un área poblada.</td></tr>
+        <tr><td rowspan="2"><strong>Caminos</strong></td><td>Vecinales</td><td>Acceso a fincas y poblados rurales; bajo volumen y corta distancia.</td></tr>
+        <tr><td>No clasificados</td><td>Sendas y trillos; acceso a muy pocos usuarios.</td></tr>
+        <tr><td><strong>Autopistas</strong></td><td>—</td><td>Cuatro o más carriles; acceso restringido a rampas autorizadas; prohibida la circulación peatonal y ciclista.</td></tr>
+        <tr><td><strong>Carreteras de acceso restringido</strong></td><td>—</td><td>Entradas y salidas limitadas por el MOPT; sin accesos directos a propiedades privadas.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Red vial nacional y red vial cantonal</h3>
+  <p>La <strong>red vial nacional</strong> está compuesta por las vías cuyo mantenimiento y administración corresponden al Ministerio de Obras Públicas y Transportes (MOPT). La <strong>red vial cantonal</strong> incluye los caminos y calles que no pertenecen a la red nacional; su conservación está a cargo de las municipalidades.</p>
+
+  <div class="callout callout-info">
+    <span class="callout-label">ℹ Derecho de vía</span>
+    Es la franja de terreno sobre la que recae el derecho del Estado para construir, mantener y ampliar la infraestructura vial. Incluye no solo el pavimento, sino también espaldones, medianeras, cunetas, señales y puentes.
+  </div>
+</section>
+
+<!-- ════════════════════ TEMA 7 ════════════════════ -->
+<section class="chapter" id="t7">
+  <div class="chapter-header">
+    <div class="chapter-icon" style="background:#d5ede0">🪪</div>
+    <div>
+      <span class="chapter-num">TEMA 07</span>
+      <h2>Licencia de conducir</h2>
+    </div>
+  </div>
+
+  <p>La licencia de conducir es el permiso emitido por el Estado que autoriza a una persona a manejar un tipo específico de vehículo por un período determinado, asumiendo la responsabilidad de respetar toda la normativa vial.</p>
+
+  <h3>Requisitos para la licencia clase B</h3>
+  <ul class="ul-styled">
+    <li>Tener 18 años cumplidos.</li>
+    <li>Saber leer y escribir (existen cursos de apoyo educativo).</li>
+    <li>Aprobar el curso teórico de educación vial.</li>
+    <li>Aprobar el examen práctico de manejo.</li>
+    <li>No haber cometido infracciones de categoría A o B en los últimos 12 meses.</li>
+    <li>Presentar dictamen médico oficial digital vigente.</li>
+  </ul>
+
+  <h3>Permiso temporal de aprendizaje</h3>
+  <p>Tiene una vigencia de <strong>tres meses</strong>. Mientras está vigente, el aprendiz debe conducir acompañado por una persona que posea la misma licencia o superior, con al menos <strong>cinco años de experiencia</strong> y sin suspensiones. Además, se requiere una póliza de seguro con cobertura de responsabilidad civil y no haber incurrido en infracciones categoría A en el último año.</p>
+
+  <h3>Tipos de licencias clase B</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Tipo</th><th>Permite conducir</th><th>Edad mínima</th><th>Requisito adicional</th></tr></thead>
+      <tbody>
+        <tr><td><strong>B-1</strong></td><td>Vehículos hasta 4.000 kg de peso bruto</td><td>18 años</td><td>—</td></tr>
+        <tr><td><strong>B-2</strong></td><td>Vehículos hasta 8.000 kg</td><td>20 años</td><td>Mínimo 2 años con licencia B o C</td></tr>
+        <tr><td><strong>B-3</strong></td><td>Todo peso excepto vehículos articulados</td><td>22 años</td><td>Mínimo 3 años con licencias B o C</td></tr>
+        <tr><td><strong>B-4</strong></td><td>Todo peso, incluidos articulados</td><td>22 años</td><td>3 años de experiencia + curso especial DGEV</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Otras clases de licencias</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Clase</th><th>Tipo de vehículo</th><th>Notas</th></tr></thead>
+      <tbody>
+        <tr><td><strong>A-1</strong></td><td>Bicimotos y motos hasta 125 cc / 11 kW; triciclos y cuatrimotos hasta 250 cc</td><td>Desde 16 años con autorización de tutores</td></tr>
+        <tr><td><strong>A-2</strong></td><td>Motocicletas hasta 500 cc / 35 kW</td><td>18 años</td></tr>
+        <tr><td><strong>A-3</strong></td><td>Sin restricciones de cilindrada ni potencia</td><td>18 años; incluye categorías anteriores</td></tr>
+        <tr><td><strong>C-1</strong></td><td>Taxis</td><td>Mínimo 3 años con B</td></tr>
+        <tr><td><strong>C-2</strong></td><td>Autobuses, busetas, microbuses</td><td>Mínimo 3 años con B + curso de transporte público</td></tr>
+        <tr><td><strong>D-1/D-2/D-3</strong></td><td>Maquinaria especial (tractores de llanta, oruga y otros equipos)</td><td>18 años; examen teórico y médico</td></tr>
+        <tr><td><strong>E-1/E-2</strong></td><td>Vehículos de múltiples ejes (no transporte público)</td><td>No requiere examen práctico</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Sistema de puntos</h3>
+  <p>La licencia está regida por el <strong>Sistema de Evaluación Permanente de Conductores</strong>. Cada infracción suma puntos. Al alcanzar el máximo permitido, la licencia queda suspendida:</p>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Vigencia de la licencia</th><th>Puntos máximos</th><th>1.ª suspensión</th><th>2.ª suspensión</th><th>3.ª y siguientes</th></tr></thead>
+      <tbody>
+        <tr><td>6 años</td><td>12 puntos</td><td rowspan="3">12 meses</td><td rowspan="3">24 meses</td><td rowspan="3">36 meses</td></tr>
+        <tr><td>4 años</td><td>8 puntos</td></tr>
+        <tr><td>3 años</td><td>6 puntos</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout callout-tip">
+    <span class="callout-label">✅ Descuento de puntos</span>
+    Un conductor puede descontar la mitad de sus puntos acumulados realizando trabajo comunitario o aprobando un curso de sensibilización y reeducación vial.
+  </div>
+  <div class="callout callout-warn">
+    <span class="callout-label">⚠ Acumulación parcial</span>
+    Si el conductor acumula 5 o más puntos sin llegar al máximo, tendrá una restricción al momento de renovar la licencia y deberá cumplir con requisitos adicionales para reacreditarse.
+  </div>
+</section>
+
+<!-- ════════════════════ TEMA 8 ════════════════════ -->
+<section class="chapter" id="t8">
+  <div class="chapter-header">
+    <div class="chapter-icon" style="background:#fef3cd">📄</div>
+    <div>
+      <span class="chapter-num">TEMA 08</span>
+      <h2>Documentos obligatorios para circular</h2>
+    </div>
+  </div>
+
+  <p>Para transitar legalmente en Costa Rica, no basta con tener la licencia. Todo vehículo automotor debe contar con un conjunto de documentos que garantizan el cumplimiento de las condiciones mínimas de seguridad.</p>
+
+  <h3>El título de propiedad</h3>
+  <p>Acredita al propietario legal del vehículo mediante su inscripción en el Registro Nacional. Debe contener: nombre e identificación del propietario, marca, año, modelo y carrocería, número de motor y placa, color, capacidad de personas y número de chasis o VIN.</p>
+
+  <h3>El número VIN</h3>
+  <p>Código de identificación global de <strong>17 caracteres</strong> que identifica de manera única a cada vehículo en el mundo. Proporciona datos sobre el fabricante, modelo, año de ensamble y número de serie. Es obligatorio para inscribir el vehículo, comprarlo, venderlo o realizarle inspecciones.</p>
+
+  <h3>La Inspección Técnica Vehicular (IVE)</h3>
+  <p>Certifica el buen estado del vehículo verificando: mecánica general, sistema eléctrico y electrónico, control de emisiones contaminantes y correcto funcionamiento de todos los dispositivos de seguridad activa y pasiva.</p>
+
+  <h3>El Marchamo y derecho de circulación</h3>
+  <p>Pago anual obligatorio ante el <strong>Instituto Nacional de Seguros (INS)</strong> que incluye la prima del seguro obligatorio. Una vez pagado, otorga el <em>derecho de circulación</em> válido por un año. Sin marchamo, el vehículo no puede transitar legalmente.</p>
+
+  <h3>Las placas reglamentarias</h3>
+  <p>Todo vehículo debe llevar:</p>
+  <ul class="ul-styled">
+    <li><strong>Placas metálicas:</strong> Una delantera (a la altura del parachoques) y una trasera.</li>
+    <li><strong>Placa adhesiva (calcomanía / "tercera placa"):</strong> Debe adherirse en el extremo superior derecho del parabrisas delantero.</li>
+  </ul>
+
+  <div class="callout callout-danger">
+    <span class="callout-label">🚨 Prohibiciones sobre las placas</span>
+    Está terminantemente prohibido: colocar la placa en un lugar diferente al diseñado, ponerla en posición distinta a la horizontal, cubrir las placas con pantallas o adhesivos, o instalar mecanismos para esconder o rotar las placas. El incumplimiento genera multas.
+  </div>
+
+  <h3>Distintivos del parabrisas</h3>
+  <p>En el parabrisas delantero deben estar visibles, juntos en la esquina superior derecha: la placa adhesiva, el adhesivo de aprobación de la IVE y la calcomanía del marchamo vigente.</p>
+
+  <h3>Dirección Electrónica Vial (DEV)</h3>
+  <p>Obligación de todo conductor y propietario de registrar un correo electrónico ante COSEVI. A esa dirección se envían notificaciones de infracciones, resoluciones y cualquier comunicación oficial. El envío a la DEV equivale a notificación válida.</p>
+
+  <div class="callout callout-info">
+    <span class="callout-label">ℹ Interdependencia de documentos</span>
+    Sin propiedad registrada no se puede matricular el vehículo. Sin la IVE aprobada no se renueva el marchamo. Sin marchamo el vehículo no puede circular. Los tres documentos son inseparables.
+  </div>
+</section>
+
+<!-- ════════════════════ TEMA 9 ════════════════════ -->
+<section class="chapter" id="t9">
+  <div class="chapter-header">
+    <div class="chapter-icon" style="background:#dce8ff">🔖</div>
+    <div>
+      <span class="chapter-num">TEMA 09</span>
+      <h2>Tipos de placas y distintivos</h2>
+    </div>
+  </div>
+
+  <p>Más allá de la obligación de portarlas, las placas tienen normas específicas de uso, mantenimiento y ubicación que todo conductor debe conocer.</p>
+
+  <h3>Tipos de placas</h3>
+  <div class="two-col">
+    <div class="col-box">
+      <h4>Placas metálicas</h4>
+      <p style="font-size:.85rem">Dos placas para vehículos de pasajeros: una delantera y una trasera. Las de fondo verde indican vehículo eléctrico. Las motocicletas solo llevan una placa trasera.</p>
+    </div>
+    <div class="col-box">
+      <h4>Placa adhesiva</h4>
+      <p style="font-size:.85rem">Calcomanía oficial con número de matrícula y bandera del país. Se coloca en el extremo superior derecho del parabrisas delantero.</p>
+    </div>
+  </div>
+
+  <h3>Infracciones relacionadas con las placas</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Infracción</th><th>Sanción</th></tr></thead>
+      <tbody>
+        <tr><td>Placas alteradas, falsas o de otro vehículo</td><td>Multa + posible cancelación de concesión (transporte público)</td></tr>
+        <tr><td>Prestar las placas a otro vehículo</td><td><span class="tag tag-amber">Categoría B</span></td></tr>
+        <tr><td>Placas mal colocadas o en lugar incorrecto</td><td><span class="tag tag-gray">Categoría D</span></td></tr>
+        <tr><td>Placas cubiertas u ocultas</td><td>Sancionado como placa alterada o falsa</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout callout-warn">
+    <span class="callout-label">⚠ Iluminación nocturna</span>
+    Los vehículos deben mantener en buen estado los dispositivos de iluminación de las placas para que sean legibles de noche. La placa no puede estar cubierta por la carga u otros elementos.
+  </div>
+</section>
+
+<!-- ════════════════════ TEMA 10 ════════════════════ -->
+<section class="chapter" id="t10">
+  <div class="chapter-header">
+    <div class="chapter-icon" style="background:#fde8e7">🤝</div>
+    <div>
+      <span class="chapter-num">TEMA 10</span>
+      <h2>Conducir y convivir con los demás usuarios</h2>
+    </div>
+  </div>
+
+  <p>Las vías son un espacio colectivo donde todos los usuarios tienen el mismo derecho a circular. Quien conduce asume la responsabilidad de respetar ese espacio y garantizar la seguridad propia y ajena.</p>
+
+  <h3>Obligaciones fundamentales del conductor</h3>
+  <ul class="ul-styled">
+    <li>Respetar todas las señales y normas de tránsito.</li>
+    <li>Mantener el vehículo en condiciones mecánicas óptimas con documentación en regla.</li>
+    <li>Conducir en condiciones físicas, mentales y emocionales adecuadas.</li>
+    <li>Respetar el espacio de los demás usuarios y evitar maniobras temerarias.</li>
+  </ul>
+
+  <h3>Usuarios vulnerables</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Usuario</th><th>Por qué es vulnerable</th><th>Precaución especial</th></tr></thead>
+      <tbody>
+        <tr><td>Peatones</td><td>A más de 40 km/h, la probabilidad de sobrevivir a un atropello baja drásticamente</td><td>Prioridad absoluta en cruces señalizados</td></tr>
+        <tr><td>Ciclistas</td><td>Sin protección ante impactos; difíciles de ver en puntos ciegos</td><td>Mínimo 1,50 m de distancia lateral al rebasarlos</td></tr>
+        <tr><td>Motociclistas</td><td>Difíciles de detectar; sin carrocería protectora</td><td>Revisar punto ciego antes de cambiar de carril</td></tr>
+        <tr><td>Niños</td><td>Campo visual periférico reducido; no calculan bien distancias y velocidades</td><td>Máxima precaución cerca de escuelas y parques</td></tr>
+        <tr><td>Adultos mayores</td><td>Reducción de capacidades visual, auditiva y de movilidad</td><td>Ceder el paso con paciencia</td></tr>
+        <tr><td>Personas con discapacidad</td><td>Limitaciones físicas, sensoriales o cognitivas</td><td>Brindar espacio sin apresurar</td></tr>
+        <tr><td>Animales en la vía</td><td>Cruzan de forma imprevista, especialmente en zonas rurales</td><td>Reducir velocidad al ver señal preventiva; no usar bocina bruscamente</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Prioridad de paso reglamentaria</h3>
+  <ol class="step-list">
+    <li>Vehículos sobre rieles (el tren siempre tiene prioridad máxima).</li>
+    <li>Indicaciones del oficial de tránsito (prevalecen sobre cualquier otra señal).</li>
+    <li>Vehículos de emergencia con sirenas o luces activas.</li>
+    <li>Jerarquía de vías: primaria &gt; secundaria &gt; terciaria.</li>
+    <li>Regla de la mano derecha: en intersecciones sin señales, ceder al vehículo que viene por la derecha.</li>
+  </ol>
+
+  <h3>Obligaciones específicas</h3>
+  <div class="two-col">
+    <div class="col-box">
+      <h4>Hacia los peatones</h4>
+      <ul style="font-size:.82rem;padding-left:1.1rem;margin:.3rem 0">
+        <li>Ceder el paso en cruces y semáforos.</li>
+        <li>No estacionar en aceras ni pasos peatonales.</li>
+        <li>Reducir velocidad en zonas escolares y hospitalarias.</li>
+      </ul>
+    </div>
+    <div class="col-box">
+      <h4>Hacia los ciclistas</h4>
+      <ul style="font-size:.82rem;padding-left:1.1rem;margin:.3rem 0">
+        <li>Mínimo 1,50 m al adelantarlos.</li>
+        <li>No invadir ciclovías para circular o estacionar.</li>
+        <li>Verificar el espejo antes de abrir la puerta.</li>
+      </ul>
+    </div>
+    <div class="col-box">
+      <h4>Hacia vehículos de emergencia</h4>
+      <ul style="font-size:.82rem;padding-left:1.1rem;margin:.3rem 0">
+        <li>Reducir velocidad y desplazarse a la derecha.</li>
+        <li>Detenerse si es necesario.</li>
+        <li>Nunca seguirlos ni bloquear sus maniobras.</li>
+      </ul>
+    </div>
+    <div class="col-box">
+      <h4>Cortesía general</h4>
+      <ul style="font-size:.82rem;padding-left:1.1rem;margin:.3rem 0">
+        <li>No bloquear intersecciones (caja amarilla).</li>
+        <li>Bocina solo para advertir peligros.</li>
+        <li>"Regla del uno a uno" en presas.</li>
+        <li>No reducir velocidad solo para ver accidentes.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Obligaciones para motociclistas y UTV</h3>
+  <ul class="ul-styled">
+    <li>Usar casco en todo momento.</li>
+    <li>Circular por el centro del carril; no zigzaguear peligrosamente.</li>
+    <li>Luces encendidas las 24 horas, incluso de día.</li>
+    <li>Respetar la distancia mínima de 1,50 m al rebasar ciclistas.</li>
+  </ul>
+</section>
+
+<!-- ════════════════════ TEMA 11 ════════════════════ -->
+<section class="chapter" id="t11">
+  <div class="chapter-header">
+    <div class="chapter-icon" style="background:#ddeaf9">🧭</div>
+    <div>
+      <span class="chapter-num">TEMA 11</span>
+      <h2>Conducción inteligente</h2>
+    </div>
+  </div>
+
+  <h3>Ubicación reglamentaria y sentido de circulación</h3>
+  <p>En Costa Rica el volante está al lado izquierdo y se circula por el lado derecho de la vía. Se debe mantener el vehículo en el centro del carril sin pisar líneas divisorias ni invadir el carril contrario. La marcha en reversa se permite exclusivamente para maniobras específicas de acomodo y no puede superar los <strong>50 metros</strong> de recorrido.</p>
+
+  <h3>Tipos de carriles y su uso correcto</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Carril</th><th>Uso reglamentario</th><th>Velocidad máxima</th></tr></thead>
+      <tbody>
+        <tr><td>Derecho</td><td>Tránsito regular; siempre se debe circular aquí</td><td>Según señalización de la vía</td></tr>
+        <tr><td>Izquierdo</td><td>Solo para adelantar; no permanecer innecesariamente</td><td>Según señalización</td></tr>
+        <tr><td>Tránsito lento</td><td>Vehículos lentos (camiones pesados, buses) que no obstaculicen el flujo</td><td>—</td></tr>
+        <tr><td>Ascenso</td><td>En montaña; vehículos lentos se apartan para que otros rebases</td><td>—</td></tr>
+        <tr><td>Exclusivo buses</td><td>Solo transporte público; conductor particular puede ingresar en zona mixta hasta 50 m antes del giro a la derecha</td><td>—</td></tr>
+        <tr><td>Reversible</td><td>Invierte su sentido según horario; regulado por semáforos especiales</td><td>—</td></tr>
+        <tr><td>Compartido</td><td>Autos, bicicletas y peatones conviven; protege usuarios vulnerables</td><td>30 km/h</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>La regla de los 3 segundos</h3>
+  <div class="hi-box">
+    <h3>Cómo calcular la distancia de seguridad</h3>
+    <p><strong>Paso 1:</strong> Elija un punto de referencia fijo en la vía (poste, señal, árbol).</p>
+    <p><strong>Paso 2:</strong> Cuando la parte trasera del vehículo de adelante pase por ese punto, comience a contar: "mil ciento uno, mil ciento dos, mil ciento tres".</p>
+    <p><strong>Paso 3:</strong> Si su vehículo llega al punto antes de terminar el conteo, está muy cerca. Reduzca la velocidad.</p>
+    <p style="margin-top:.5rem;font-size:.82rem;color:rgba(255,255,255,.6)">En lluvia, neblina o de noche: duplique la distancia (5 a 6 segundos).</p>
+  </div>
+
+  <h3>Circulación en presas</h3>
+  <div class="callout callout-warn">
+    <span class="callout-label">⚠ Qué NO hacer en congestionamiento</span>
+    Tocar la bocina innecesariamente · Acelerar agresivamente y frenar bruscamente · Cambiar de carril de forma constante y sin señalizar. Todo esto aumenta el estrés, el riesgo de colisiones y el consumo de combustible.
+  </div>
+  <p>La conducta correcta: avanzar a baja velocidad en primera o segunda marcha, señalizar cada movimiento, respetar el espacio de motociclistas y ciclistas, y nunca bloquear las intersecciones.</p>
+
+  <h3>Ergonomía y postura al conducir</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Elemento</th><th>Ajuste correcto</th></tr></thead>
+      <tbody>
+        <tr><td>Asiento (distancia y altura)</td><td>Al pisar los pedales a fondo, las piernas deben quedar ligeramente flexionadas. La altura debe permitir ver el tablero y la carretera con claridad.</td></tr>
+        <tr><td>Respaldo e inclinación</td><td>Cerca de 90°; la espalda completamente apoyada con hombros en contacto con el asiento.</td></tr>
+        <tr><td>Volante y manos</td><td>Brazos ligeramente flexionados al sujetar el volante. Posición "9 y 15" o "10 y 10".</td></tr>
+        <tr><td>Reposacabezas</td><td>Parte central alineada con la parte posterior de la cabeza.</td></tr>
+        <tr><td>Espejos</td><td>Interior y exteriores regulados para el máximo campo visual; espejos laterales mostrando apenas la manija de la puerta trasera.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Visión proyectada y adherencia</h3>
+  <p>Un conductor inteligente proyecta la mirada al menos <strong>100 metros</strong> hacia adelante para anticipar obstáculos. La adherencia de los neumáticos disminuye con la lluvia, el barro, la arena y los derrames de aceite. Ante cualquier condición adversa: aumentar la distancia de seguridad, encender las luces y reducir la velocidad.</p>
+</section>
+
+<!-- ════════════════════ TEMA 12 ════════════════════ -->
+<section class="chapter" id="t12">
+  <div class="chapter-header">
+    <div class="chapter-icon" style="background:#fde8e7">👁</div>
+    <div>
+      <span class="chapter-num">TEMA 12</span>
+      <h2>Atención y percepción del entorno</h2>
+    </div>
+  </div>
+
+  <h3>Conducción preventiva y visión proyectada</h3>
+  <p>Conducir no es solo reaccionar a lo inmediato: exige anticipar. La técnica principal es proyectar la vista al menos <strong>100 metros</strong> hacia adelante, abarcando el entorno completo de la carretera para procesar la información con tiempo suficiente.</p>
+
+  <h3>Tiempo de reacción y distancia de frenado</h3>
+  <p>El tiempo de reacción es el intervalo entre que el conductor percibe un peligro y el momento en que acciona el freno. En condiciones normales es de <strong>0,75 a 1 segundo</strong>. A 80 km/h, el vehículo recorre aproximadamente <strong>22 metros por segundo</strong>, por lo que en ese segundo habrá avanzado más de 20 metros antes de comenzar a frenar.</p>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Factor</th><th>Efecto sobre el tiempo de reacción</th></tr></thead>
+      <tbody>
+        <tr><td>Cansancio y somnolencia</td><td>Lo aumenta significativamente</td></tr>
+        <tr><td>Consumo de alcohol o drogas</td><td>Lo aumenta drásticamente</td></tr>
+        <tr><td>Medicamentos con efectos sedantes</td><td>Lo aumenta</td></tr>
+        <tr><td>Edad avanzada</td><td>Tendencia a aumentarlo</td></tr>
+        <tr><td>Estrés y distracción</td><td>Lo aumenta</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>La <strong>distancia de detención</strong> = distancia de reacción + distancia de frenado. El estado de los frenos, las llantas y la calzada influyen directamente en la segunda.</p>
+
+  <h3>Observación activa y puntos ciegos</h3>
+  <p>Ningún espejo elimina por completo los puntos ciegos. Antes de cambiar de carril o girar, el orden correcto es:</p>
+  <ol class="step-list">
+    <li>Activar la direccional con suficiente antelación.</li>
+    <li>Revisar los espejos retrovisores.</li>
+    <li>Girar la cabeza para verificar el ángulo muerto directamente.</li>
+    <li>Ejecutar la maniobra solo si está completamente despejado.</li>
+  </ol>
+
+  <h3>Anticipación de maniobras ajenas</h3>
+  <p>Un conductor perceptivo observa continuamente los otros carriles para prever: vehículos que puedan cambiar de carril bruscamente, autos que vienen en sentido contrario y podrían invadir el carril, y vehículos que intentan incorporarse desde calles secundarias.</p>
+
+  <div class="callout callout-warn">
+    <span class="callout-label">⚠ Sustancias peligrosas en el asfalto</span>
+    Derrames de gasolina, diésel o aceite de motor eliminan la fricción entre los neumáticos y la calzada. Al detectarlos (mancha brillante en el pavimento), reducir la velocidad gradualmente y evitar cualquier frenada brusca.
+  </div>
+</section>
+
+<!-- ════════════════════ TEMA 13 ════════════════════ -->
+<section class="chapter" id="t13">
+  <div class="chapter-header">
+    <div class="chapter-icon" style="background:#d5ede0">🗺</div>
+    <div>
+      <span class="chapter-num">TEMA 13</span>
+      <h2>Preparación y desarrollo de un viaje</h2>
+    </div>
+  </div>
+
+  <h3>Revisión del vehículo antes de salir</h3>
+  <ul class="ul-styled">
+    <li>Verificar que no haya manchas de líquido debajo del vehículo (posibles fugas).</li>
+    <li>Revisar estado y presión de las llantas.</li>
+    <li>Confirmar que no haya luces de advertencia encendidas en el tablero.</li>
+    <li>Verificar niveles de aceite del motor, líquido de frenos, refrigerante y agua del limpiaparabrisas.</li>
+    <li>Comprobar que todas las luces funcionen correctamente.</li>
+  </ul>
+
+  <h3>Estado del conductor</h3>
+  <p>Quien conduce debe estar en pleno control de sus capacidades físicas, emocionales y psicológicas. No se debe conducir si: se tienen padecimientos médicos sin tratar, se han consumido sustancias que afecten la percepción o el tiempo de reacción, o si se tomaron medicamentos con advertencias de no manejar. <strong>Siempre revisar el prospecto del medicamento antes de conducir.</strong></p>
+
+  <h3>Planificación de la ruta</h3>
+  <p>Conocer la ruta con anticipación es especialmente importante en viajes largos. Considerar: tipo de terreno (montaña o costa), condiciones climáticas esperadas, presencia de vehículos pesados en el trayecto. Si el conductor es principiante, se recomienda evitar rutas nocturnas o de alto tránsito.</p>
+
+  <h3>Seguridad de pasajeros, mascotas y equipaje</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Aspecto</th><th>Regla</th></tr></thead>
+      <tbody>
+        <tr><td>Cinturón de seguridad</td><td>Obligatorio para TODOS los ocupantes, incluidos los asientos traseros</td></tr>
+        <tr><td>Menores de 12 años</td><td>Deben usar SRI adecuado a su peso y estatura</td></tr>
+        <tr><td>Mascotas</td><td>Gatos en jaula transportadora · Perros con cinturón especial en asientos traseros · Nunca sueltas ni en el regazo del conductor</td></tr>
+        <tr><td>Equipaje</td><td>Siempre en el maletero (cajuela). Jamás objetos sueltos en el habitáculo: en frenazo brusco pueden multiplicar su peso hasta 50 veces</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Actitud y pausas en trayectos largos</h3>
+  <p>Una actitud positiva al volante reduce el estrés y previene conflictos. En viajes extensos, se recomienda hacer <strong>pausas activas cada dos horas</strong>: detener el vehículo en lugar seguro, caminar, estirar los músculos, hidratarse y respirar aire fresco. No es recomendable conducir más de dos horas seguidas sin una pausa.</p>
+
+  <div class="callout callout-tip">
+    <span class="callout-label">✅ Documentación obligatoria</span>
+    Antes de salir, confirmar que se porta: cédula de identidad, licencia de conducir vigente, título de propiedad, calcomanía de la IVE aprobada y marchamo del año en curso.
+  </div>
+</section>
+
+<!-- ════════════════════ TEMA 14 ════════════════════ -->
+<section class="chapter" id="t14">
+  <div class="chapter-header">
+    <div class="chapter-icon" style="background:#fde8e7">🚦</div>
+    <div>
+      <span class="chapter-num">TEMA 14</span>
+      <h2>Señales de tránsito</h2>
+    </div>
+  </div>
+
+  <p>Las señales de tránsito son el sistema de comunicación de las vías. Respetarlas no es solo una obligación legal: es la responsabilidad de garantizar la convivencia y proteger la vida. Se agrupan en cinco categorías: verticales, horizontales, luminosas, sonoras y manuales.</p>
+
+  <h3>Señales verticales</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Tipo</th><th>Forma / Color</th><th>Función</th></tr></thead>
+      <tbody>
+        <tr><td><strong>ALTO</strong></td><td>Octagonal roja</td><td>Detención total obligatoria</td></tr>
+        <tr><td><strong>CEDA EL PASO</strong></td><td>Triangular, borde rojo</td><td>Reducir y ceder prioridad</td></tr>
+        <tr><td><strong>Reglamentación</strong></td><td>Rectangular, fondo blanco / círculo rojo</td><td>Obliga o prohíbe una acción</td></tr>
+        <tr><td><strong>Prohibición</strong></td><td>Circular, borde rojo</td><td>Acción expresamente prohibida</td></tr>
+        <tr><td><strong>Obligación</strong></td><td>Circular, fondo azul</td><td>Acción de cumplimiento obligatorio</td></tr>
+        <tr><td><strong>Prevención</strong></td><td>Rombo / cuadrado amarillo, símbolos negros</td><td>Advertencia de peligro o riesgo</td></tr>
+        <tr><td><strong>Prevención en obras</strong></td><td>Rombo naranja</td><td>Peligro por trabajos en la vía</td></tr>
+        <tr><td><strong>Información (vía rápida)</strong></td><td>Rectangular verde</td><td>Orientación de destinos y distancias</td></tr>
+        <tr><td><strong>Información (secundaria)</strong></td><td>Rectangular, bordes negros, fondo blanco</td><td>Orientación en rutas secundarias</td></tr>
+        <tr><td><strong>Servicios / turismo</strong></td><td>Rectangular azul</td><td>Gasolineras, alojamientos, servicios</td></tr>
+        <tr><td><strong>Parques nacionales</strong></td><td>Rectangular café / marrón</td><td>Áreas silvestres protegidas</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Señales horizontales (demarcación en el asfalto)</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Color</th><th>Uso principal</th></tr></thead>
+      <tbody>
+        <tr><td>Amarillo</td><td>Separa carriles de sentidos opuestos. Prohíbe estacionamiento cuando está en bordillos o caños.</td></tr>
+        <tr><td>Blanco</td><td>Separa carriles del mismo sentido. Demarca: ALTO, CEDA, velocidades, pasos peatonales, flechas.</td></tr>
+        <tr><td>Azul</td><td>Espacios reservados para personas con discapacidad.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Tipos de líneas y su significado</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Línea</th><th>Color</th><th>Significado</th></tr></thead>
+      <tbody>
+        <tr><td>De centro continua</td><td>Amarilla</td><td><strong>Prohíbe</strong> adelantar; separación de sentidos contrarios</td></tr>
+        <tr><td>De centro discontinua</td><td>Amarilla</td><td><strong>Permite</strong> adelantar con precaución</td></tr>
+        <tr><td>De barrera</td><td>Amarilla doble o continua</td><td>Prohibición total de adelantar</td></tr>
+        <tr><td>De borde</td><td>Blanca continua</td><td>Límite de la calzada; separa la vía del espaldón o caño</td></tr>
+        <tr><td>De vía (entre carriles)</td><td>Blanca discontinua</td><td>Permite cambio de carril</td></tr>
+        <tr><td>De vía continua</td><td>Blanca continua</td><td>Prohíbe cambio de carril</td></tr>
+        <tr><td>Caja amarilla</td><td>Amarilla, cuadrícula</td><td>Prohíbe bloquear la intersección</td></tr>
+        <tr><td>Carril reversible</td><td>Blanca y amarilla discontinua</td><td>Regulado por semáforos especiales según horario</td></tr>
+        <tr><td>Carril exclusivo giro izquierda</td><td>Amarilla doble con discontinua interior</td><td>Solo para girar a la izquierda; no se usa para circular ni para girar en U</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Captaluces (ojos de gato)</h3>
+  <ul class="def-list">
+    <li><strong>Amarillos:</strong> separación de carriles del mismo sentido.</li>
+    <li><strong>Blancos:</strong> borde derecho de la calzada (zona de menor riesgo).</li>
+    <li><strong>Rojos:</strong> borde izquierdo o zona de mayor riesgo (no pisar).</li>
+  </ul>
+
+  <h3>Semáforos</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Luz / Modo</th><th>Significado para conductores</th></tr></thead>
+      <tbody>
+        <tr><td>Roja fija</td><td>Detenerse antes de la línea de parada</td></tr>
+        <tr><td>Amarilla fija</td><td>Prepararse para detenerse; pasar solo si no es posible frenar con seguridad</td></tr>
+        <tr><td>Verde fija</td><td>Avanzar según las direcciones autorizadas</td></tr>
+        <tr><td>Roja intermitente</td><td>Equivale a señal de ALTO: detención total y ceder el paso</td></tr>
+        <tr><td>Amarilla intermitente</td><td>Equivale a señal de CEDA: reducir velocidad</td></tr>
+        <tr><td>Flecha verde</td><td>Avanzar exclusivamente en la dirección indicada por la flecha</td></tr>
+        <tr><td>X roja</td><td>Carril reversible prohibido</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout callout-danger">
+    <span class="callout-label">🚨 Regla suprema</span>
+    Las indicaciones de un oficial de tránsito mediante señales manuales tienen prioridad máxima y anulan cualquier otra señal, semáforo o demarcación.
+  </div>
+
+  <h3>Velocidades por defecto (sin señalización)</h3>
+  <div class="card-grid">
+    <div class="card"><div class="card-number" style="color:var(--accent-3)">50</div><div class="card-unit">km/h mínimo</div><div class="card-desc">En autopistas sin señalización</div></div>
+    <div class="card"><div class="card-number" style="color:var(--accent-3)">50</div><div class="card-unit">km/h máximo</div><div class="card-desc">Zonas urbanas de alta densidad</div></div>
+    <div class="card"><div class="card-number" style="color:var(--accent)">25</div><div class="card-unit">km/h máximo</div><div class="card-desc">Pasos peatonales en zonas escolares y hospitalarias</div></div>
+  </div>
+</section>
+
+<!-- ════════════════════ TEMA 15 ════════════════════ -->
+<section class="chapter" id="t15">
+  <div class="chapter-header">
+    <div class="chapter-icon" style="background:#dce8ff">⚡</div>
+    <div>
+      <span class="chapter-num">TEMA 15</span>
+      <h2>Límites de velocidad</h2>
+    </div>
+  </div>
+
+  <p>En Costa Rica, los límites de velocidad son fijados por la <strong>Dirección General de Ingeniería de Tránsito</strong> mediante estudios técnicos y se actualizan con las tendencias internacionales. Toda carretera y sus tramos deben tener señalizada la velocidad máxima permitida.</p>
+
+  <h3>Velocidades reglamentarias</h3>
+  <div class="card-grid">
+    <div class="card"><div class="card-number" style="color:var(--accent)">120</div><div class="card-unit">km/h</div><div class="card-desc">Límite máximo absoluto en cualquier vía. Superarlo = Categoría A (6 puntos)</div></div>
+    <div class="card"><div class="card-number" style="color:var(--accent-3)">80</div><div class="card-unit">km/h</div><div class="card-desc">Carril interno (izquierdo) de autopista</div></div>
+    <div class="card"><div class="card-number" style="color:var(--accent-3)">60</div><div class="card-unit">km/h</div><div class="card-desc">Vía sin demarcación / carril derecho autopista</div></div>
+    <div class="card"><div class="card-number" style="color:var(--accent-3)">50</div><div class="card-unit">km/h</div><div class="card-desc">Zonas urbanas de alta densidad poblacional</div></div>
+    <div class="card"><div class="card-number" style="color:var(--accent-2)">30</div><div class="card-unit">km/h</div><div class="card-desc">Carril compartido auto + bici + peatón; dentro de túneles</div></div>
+    <div class="card"><div class="card-number" style="color:var(--accent)">25</div><div class="card-unit">km/h</div><div class="card-desc">Frente a escuelas <em>con estudiantes presentes</em>, hospitales y concentraciones masivas</div></div>
+    <div class="card"><div class="card-number" style="color:var(--accent-3)">20</div><div class="card-unit">km/h</div><div class="card-desc">Velocidad máxima permitida en marcha atrás (reversa)</div></div>
+    <div class="card"><div class="card-number" style="color:var(--accent-3)">50</div><div class="card-unit">km/h mínimo</div><div class="card-desc">Velocidad mínima en autopistas; evita obstaculizar el flujo rápido</div></div>
+  </div>
+
+  <div class="callout callout-warn">
+    <span class="callout-label">⚠ Notas importantes</span>
+    La zona escolar de 25 km/h aplica <strong>únicamente cuando hay estudiantes presentes</strong>. Fuera de ese horario, rige el límite general de la vía. Al adelantar, no se puede superar el límite establecido en más de <strong>30 km/h</strong>.
+  </div>
+
+  <div class="callout callout-danger">
+    <span class="callout-label">🚨 Efecto mirón — multa categoría E</span>
+    Reducir la velocidad sin justificación para observar un accidente o evento llamativo en la vía genera congestión innecesaria y está sancionado. Conducir de esta manera es una infracción.
+  </div>
+</section>
+
+<!-- ════════════════════ TEMA 16 ════════════════════ -->
+<section class="chapter" id="t16">
+  <div class="chapter-header">
+    <div class="chapter-icon" style="background:#fde8e7">🎛</div>
+    <div>
+      <span class="chapter-num">TEMA 16</span>
+      <h2>Mandos y controles del automóvil</h2>
+    </div>
+  </div>
+
+  <h3>El panel de instrumentos y sus colores</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Color</th><th>Significado</th><th>Acción recomendada</th></tr></thead>
+      <tbody>
+        <tr><td><span class="tag tag-red">Rojo</span></td><td>Situación grave e inmediata (puerta abierta, recalentamiento, falla crítica)</td><td>Detener el vehículo lo antes posible</td></tr>
+        <tr><td><span class="tag tag-amber">Ámbar / Amarillo</span></td><td>Advertencia preventiva (falla menor, nivel bajo de combustible)</td><td>Atender en la próxima parada</td></tr>
+        <tr><td><span class="tag tag-green">Verde / Azul</span></td><td>Informativo; confirma que un sistema está activo (luces, direccionales)</td><td>Solo informativo</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Instrumentos esenciales del panel</h3>
+  <ul class="def-list">
+    <li><strong>Velocímetro:</strong> Indica la velocidad exacta en km/h. Fundamental para respetar los límites establecidos.</li>
+    <li><strong>Tacómetro:</strong> Mide las revoluciones por minuto (RPM) del motor; indica el momento óptimo para cambiar de marcha.</li>
+    <li><strong>Indicador de temperatura del motor:</strong> La aguja debe mantenerse en el centro. Si sube al área roja (letra H), apagar el motor inmediatamente.</li>
+    <li><strong>Indicador de batería:</strong> Si se enciende en rojo con el motor en marcha, el alternador no está cargando correctamente.</li>
+    <li><strong>Indicador de combustible:</strong> Al llegar a la reserva (letra E) se enciende una luz ámbar de advertencia.</li>
+    <li><strong>Odómetro:</strong> Registra la distancia total recorrida; sirve para programar mantenimientos preventivos.</li>
+  </ul>
+
+  <div class="callout callout-danger">
+    <span class="callout-label">🚨 Regla de oro ante el recalentamiento</span>
+    Nunca abrir la tapa del radiador con el motor caliente. La presión del agua hirviendo puede salir violentamente y causar quemaduras graves en rostro y manos.
+  </div>
+
+  <h3>Luces del vehículo</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Tipo de luz</th><th>Cuándo usarla</th><th>Restricciones</th></tr></thead>
+      <tbody>
+        <tr><td>Luces altas</td><td>Carreteras abiertas sin tráfico en sentido contrario ni vehículos adelante</td><td>Cambiar a bajas al menos 150 m antes de cruzarse con otro vehículo</td></tr>
+        <tr><td>Luces bajas</td><td>6:00 pm a 6:00 am; lluvia, neblina, túneles; al seguir o cruzar otro vehículo</td><td>No usar altas en estas situaciones</td></tr>
+        <tr><td>Direccionales</td><td>Antes de cambiar de carril, adelantar o girar</td><td>Apagar cuando ya no corresponda</td></tr>
+        <tr><td>De emergencia (intermitentes)</td><td>Avería, parada involuntaria, velocidad muy reducida, remolque, marcha atrás</td><td>No usar para saltarse semáforos ni "permiso" para estacionar</td></tr>
+        <tr><td>De neblina (antiniebla)</td><td>Visibilidad reducida por neblina o lluvia intensa</td><td>Prohibido usarlas con luces altas o en condiciones normales</td></tr>
+        <tr><td>Marcha atrás</td><td>Se activan automáticamente al seleccionar reversa</td><td>Activar primero las de emergencia al retroceder</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout callout-info">
+    <span class="callout-label">ℹ Motocicletas, cuatrimotos y UTV</span>
+    Deben mantener las luces encendidas las 24 horas del día, incluso bajo el sol. Las bicicletas no están obligadas a llevar luces de día, pero sí en la noche.
+  </div>
+
+  <h3>La palanca de cambios</h3>
+  <div class="two-col">
+    <div class="col-box">
+      <h4>Transmisión manual</h4>
+      <p style="font-size:.85rem">El conductor opera el embrague y selecciona la marcha. Mayor control en pendientes y terrenos difíciles. La "caja de velocidades" generalmente tiene 5 o 6 marchas hacia adelante más la reversa.</p>
+    </div>
+    <div class="col-box">
+      <h4>Transmisión automática</h4>
+      <p style="font-size:.85rem"><strong>P</strong> = Parking (inmovilizar) · <strong>R</strong> = Reversa · <strong>N</strong> = Neutro · <strong>D</strong> = Drive · <strong>L / 1-2</strong> = Marchas bajas para pendientes · <strong>S</strong> = Sport (marchas cortas en curvas)</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ TEMA 17 ════════════════════ -->
+<section class="chapter" id="t17">
+  <div class="chapter-header">
+    <div class="chapter-icon" style="background:#dce8ff">🔭</div>
+    <div>
+      <span class="chapter-num">TEMA 17</span>
+      <h2>Elementos que permiten la visibilidad</h2>
+    </div>
+  </div>
+
+  <p>Ver y ser visto es fundamental para evitar accidentes. El vehículo dispone de múltiples elementos diseñados para maximizar el campo visual del conductor.</p>
+
+  <h3>Vidrios del vehículo</h3>
+  <p>El parabrisas y la ventana trasera protegen a los ocupantes del viento y el polvo mientras permiten observar el entorno. Las ventanas laterales amplían el campo de visión. Sobre el parabrisas solo se permite colocar los adhesivos estrictamente obligatorios (placa, IVE, marchamo).</p>
+
+  <h3>Limpiaparabrisas y visera</h3>
+  <p>Los limpiaparabrisas mantienen la visión nítida bajo lluvia o suciedad. La <strong>visera</strong> es el elemento móvil interno en la parte superior del parabrisas que protege al conductor del deslumbramiento solar. Un encandilamiento intenso puede cegar temporalmente y causar accidentes.</p>
+
+  <h3>Espejos retrovisores y su ajuste correcto</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Espejo</th><th>Proporciona</th><th>Ajuste correcto</th></tr></thead>
+      <tbody>
+        <tr><td>Central</td><td>Vista directa hacia atrás del vehículo</td><td>Centrado en el marco trasero, sin girarlo</td></tr>
+        <tr><td>Lateral izquierdo</td><td>Visión del costado izquierdo</td><td>Solo visible la manija de la puerta trasera en el borde interior</td></tr>
+        <tr><td>Lateral derecho</td><td>Visión del costado derecho</td><td>Igual que el izquierdo; abre el máximo ángulo de visión</td></tr>
+        <tr><td>Ojo de pescado (si disponible)</td><td>Visión panorámica ampliada</td><td>Pequeño espejo convexo secundario; ayuda a detectar maniobras</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout callout-warn">
+    <span class="callout-label">⚠ El ángulo muerto</span>
+    Zona alrededor del vehículo que ningún espejo puede cubrir. Se ubica principalmente en los laterales justo fuera del campo visual de los retrovisores. Para eliminarlo: girar físicamente la cabeza antes de cualquier maniobra. Los espejos minimizan los ángulos muertos pero nunca los eliminan por completo.
+  </div>
+
+  <h3>Tecnologías para reducir puntos ciegos</h3>
+  <ul class="ul-styled">
+    <li>Cámaras de retroceso con asistencia sonora (se activan al seleccionar reversa).</li>
+    <li>Cámaras laterales de alta definición.</li>
+    <li>Sistemas ADAS con sensores que emiten alertas si un vehículo está en el punto ciego.</li>
+  </ul>
+  <div class="callout callout-danger">
+    <span class="callout-label">🚨 No sobreconfiar en la tecnología</span>
+    Los sistemas electrónicos asisten al conductor, pero no lo reemplazan. La verificación directa girando la cabeza sigue siendo obligatoria antes de cualquier maniobra.
+  </div>
+</section>
+
+<!-- ════════════════════ TEMA 18 ════════════════════ -->
+<section class="chapter" id="t18">
+  <div class="chapter-header">
+    <div class="chapter-icon" style="background:#fef3cd">🛞</div>
+    <div>
+      <span class="chapter-num">TEMA 18</span>
+      <h2>Las llantas</h2>
+    </div>
+  </div>
+
+  <p>Las llantas son el único punto de contacto entre el vehículo y la calzada. Su estado determina directamente la capacidad de frenado, la estabilidad en curvas y la respuesta ante condiciones adversas.</p>
+
+  <h3>Funciones principales de las llantas</h3>
+  <ul class="ul-styled">
+    <li>Soportar el peso total del vehículo y su carga.</li>
+    <li>Mantener la trayectoria definida por el conductor.</li>
+    <li>Garantizar tracción y agarre bajo cualquier condición climática.</li>
+    <li>Actuar como primer filtro de amortiguación ante irregularidades de la calzada.</li>
+  </ul>
+
+  <h3>Presión de inflado</h3>
+  <p>La presión recomendada generalmente está entre <strong>30 y 35 PSI</strong>, aunque siempre se debe verificar la indicación exacta del fabricante del vehículo. Regla fundamental: la presión debe medirse siempre con la llanta <strong>fría</strong> (antes de iniciar el recorrido), ya que el calor de la fricción expande el aire y da lecturas incorrectas. Revisar al menos <strong>una vez al mes</strong>.</p>
+
+  <h3>El testigo de desgaste (TWI)</h3>
+  <p>Pequeño taco de goma de aproximadamente 1,6 mm ubicado en el fondo de las ranuras principales. Cuando la superficie de rodamiento llega al nivel del testigo, la llanta debe reemplazarse inmediatamente: el riesgo de derrape es crítico.</p>
+
+  <h3>Tipos de desgaste y su significado</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Patrón de desgaste</th><th>Causa probable</th></tr></thead>
+      <tbody>
+        <tr><td>Uniforme en toda la superficie</td><td>Desgaste normal; presión y alineación correctas</td></tr>
+        <tr><td>Desgaste en el centro</td><td>Presión de inflado excesiva (llanta sobreinflada)</td></tr>
+        <tr><td>Desgaste en los lados (hombros)</td><td>Presión de inflado insuficiente (llanta desinflada)</td></tr>
+        <tr><td>Desgaste en un solo extremo</td><td>Problema de alineación o daño en la suspensión</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Tipos de llantas</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Tipo</th><th>Diseño</th><th>Uso ideal</th></tr></thead>
+      <tbody>
+        <tr><td>HT (Highway Terrain)</td><td>Banda suave y continua</td><td>Asfalto seco o mojado; viajes en vías regulares</td></tr>
+        <tr><td>AT (All Terrain)</td><td>Estrías más separadas</td><td>Asfalto y terrenos de tierra o lastre</td></tr>
+        <tr><td>MT (Mud Terrain)</td><td>Tacos grandes y profundos</td><td>Terrenos muy difíciles; menor rendimiento en asfalto</td></tr>
+        <tr><td>Unidireccionales</td><td>Flecha en la pared indica el sentido</td><td>Según fabricante; si se instalan al revés pierden eficacia y aumentan el riesgo de hidroplaneamiento</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Cambio de llanta en emergencia</h3>
+  <ol class="step-list">
+    <li>Estacionar en lugar plano y seguro, fuera de la calzada.</li>
+    <li>Colocar triángulos de emergencia, activar luces intermitentes y ponerse el chaleco reflectivo.</li>
+    <li>Aflojar las tuercas (en sentido antihorario) antes de levantar el vehículo.</li>
+    <li>Colocar la gata en el punto indicado por el manual hasta que la llanta dañada quede a 10-15 cm del suelo.</li>
+    <li>Retirar las tuercas, extraer la llanta dañada y montar la de repuesto.</li>
+    <li>Bajar el vehículo y apretar las tuercas en orden de cruz.</li>
+  </ol>
+
+  <div class="callout callout-warn">
+    <span class="callout-label">⚠ La llanta de repuesto es temporal</span>
+    Generalmente más delgada; límite de velocidad de 80 km/h. Usarla solo para llegar al taller más cercano y reemplazarla lo antes posible.
+  </div>
+</section>
+
+<!-- ════════════════════ TEMA 19 ════════════════════ -->
+<section class="chapter" id="t19">
+  <div class="chapter-header">
+    <div class="chapter-icon" style="background:#fde8e7">🛑</div>
+    <div>
+      <span class="chapter-num">TEMA 19</span>
+      <h2>Los frenos y su importancia</h2>
+    </div>
+  </div>
+
+  <p>Los frenos son la principal herramienta de seguridad activa del vehículo. Comprender su funcionamiento y usarlos correctamente puede marcar la diferencia entre un susto y una tragedia.</p>
+
+  <h3>Tipos de frenos</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Tipo</th><th>Funcionamiento</th><th>Característica clave</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Freno de mano</strong></td><td>Mantiene inmovilizado el vehículo estacionado (actúa sobre el eje trasero)</td><td>Verificar que no esté accionado al arrancar (luz roja en panel)</td></tr>
+        <tr><td><strong>Frenos de tambor</strong></td><td>Zapatas que presionan las paredes internas de un tambor metálico</td><td>Menor ventilación; se calientan más rápido. En bajadas prolongadas, usar compresión del motor</td></tr>
+        <tr><td><strong>Frenos de disco</strong></td><td>Pastillas que friccionan contra un disco expuesto al aire</td><td>Mejor refrigeración; mayor eficacia. Estándar en el eje delantero</td></tr>
+        <tr><td><strong>Sistema ABS</strong></td><td>Evita el bloqueo de ruedas en frenadas de emergencia</td><td>Al activarlo: pisar a fondo de un solo golpe; el sistema regula solo</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Ventajas del sistema ABS</h3>
+  <div class="hi-box">
+    <h3>Por qué el ABS salva vidas</h3>
+    <ul>
+      <li>Mantiene las ruedas girando durante la frenada, preservando la capacidad de dirección.</li>
+      <li>El conductor puede girar el volante para esquivar un obstáculo mientras frena.</li>
+      <li>Distancia de frenado más corta en superficies resbaladizas.</li>
+      <li>Menor desgaste de neumáticos al evitar el deslizamiento sobre el asfalto.</li>
+    </ul>
+  </div>
+
+  <div class="callout callout-warn">
+    <span class="callout-label">⚠ Sin ABS</span>
+    En vehículos sin ABS, ante una frenada de emergencia se debe "bombear" el pedal de freno manualmente (presionar y soltar de forma rápida y repetida) para evitar el bloqueo de las llantas y conservar la capacidad de dirección.
+  </div>
+</section>
+
+<!-- ════════════════════ TEMA 20 ════════════════════ -->
+<section class="chapter" id="t20">
+  <div class="chapter-header">
+    <div class="chapter-icon" style="background:#d5ede0">⚙️</div>
+    <div>
+      <span class="chapter-num">TEMA 20</span>
+      <h2>Tipos de transmisión y su uso correcto</h2>
+    </div>
+  </div>
+
+  <p>La transmisión lleva la potencia del motor a las ruedas, ajustando velocidad y fuerza según las condiciones de la vía. Usarla correctamente ahorra combustible, protege el motor y mejora la seguridad.</p>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Tipo</th><th>Funcionamiento</th><th>Ventaja principal</th><th>Uso recomendado</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Manual</strong></td><td>El conductor opera embrague y palanca para seleccionar cada marcha</td><td>Mayor control en pendientes y terrenos difíciles; transferencia directa de fuerza</td><td>Carreteras de montaña, conducción deportiva</td></tr>
+        <tr><td><strong>Automática</strong></td><td>Convertidor de par realiza los cambios de forma autónoma</td><td>Reduce la fatiga; mayor atención disponible para el entorno</td><td>Tráfico denso con frecuentes arranques y paradas</td></tr>
+        <tr><td><strong>CVT</strong></td><td>Marchas infinitas o continuas; cambios imperceptibles</td><td>Máxima eficiencia de combustible; motor siempre en su mejor rango</td><td>Uso urbano; híbridos y eléctricos</td></tr>
+        <tr><td><strong>Semiautomática</strong></td><td>El sistema electromecánico activa el embrague; el conductor cambia marcha con palancas o botones</td><td>Combina el control manual con la comodidad automática</td><td>Conducción deportiva o mixta</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout callout-tip">
+    <span class="callout-label">✅ Transmisión automática en bajadas</span>
+    Para descender pendientes pronunciadas con caja automática, usar las posiciones <strong>L, 1 o 2</strong> (Low) para aprovechar la compresión del motor y no sobrecargar los frenos.
+  </div>
+</section>
+
+<!-- ════════════════════ TEMA 21 ════════════════════ -->
+<section class="chapter" id="t21">
+  <div class="chapter-header">
+    <div class="chapter-icon" style="background:#ddeaf9">🔩</div>
+    <div>
+      <span class="chapter-num">TEMA 21</span>
+      <h2>Mantenimiento preventivo</h2>
+    </div>
+  </div>
+
+  <p>El mantenimiento preventivo consiste en revisar y atender el vehículo de forma sistemática antes de que aparezcan fallas. Su objetivo es alargar la vida útil del automóvil y, sobre todo, garantizar la seguridad de todos sus ocupantes.</p>
+
+  <h3>Sistemas fundamentales del vehículo</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Sistema</th><th>Función</th><th>Señal de problema</th></tr></thead>
+      <tbody>
+        <tr><td>Dirección</td><td>Orienta el vehículo según la decisión del conductor</td><td>Volante duro, ruidoso, con vibración o desalineado</td></tr>
+        <tr><td>Frenos</td><td>Reduce la velocidad o detiene el vehículo</td><td>Vibraciones, chirridos o pedal esponjoso</td></tr>
+        <tr><td>Suspensión</td><td>Absorbe irregularidades y brinda estabilidad</td><td>Rebotes excesivos, inclinación en curvas, desgaste irregular de llantas</td></tr>
+        <tr><td>Alimentación (combustible)</td><td>Suministra energía al motor</td><td>Dificultad para arrancar, falta de potencia</td></tr>
+        <tr><td>Escape</td><td>Conduce los gases quemados fuera del motor</td><td>Ruido excesivo, olor a gases en el interior, humo negro</td></tr>
+        <tr><td>Eléctrico</td><td>Arranque, carga de batería y funcionamiento de luces</td><td>Luces tenues, dificultad para arrancar</td></tr>
+        <tr><td>Lubricación</td><td>Reduce fricción entre piezas, refrigera y protege</td><td>Manchas de aceite, ruidos metálicos en el motor</td></tr>
+        <tr><td>Embrague</td><td>Separa motor de transmisión para cambiar marcha</td><td>Pedal vibrante, dificultad para entrar marchas, motor sube de RPM sin acelerar</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Revisión diaria (antes de circular)</h3>
+  <ul class="ul-styled">
+    <li>Presión y estado general de las llantas.</li>
+    <li>Nivel de aceite del motor y líquido de frenos.</li>
+    <li>Funcionamiento de todas las luces (incluyendo de freno y reversa).</li>
+    <li>Estado de las escobillas del limpiaparabrisas.</li>
+    <li>Verificar que no haya luces de advertencia en el tablero.</li>
+    <li>Licencia y documentación del vehículo vigentes.</li>
+  </ul>
+
+  <h3>Revisión periódica (cada seis meses o según kilometraje)</h3>
+  <ul class="ul-styled">
+    <li>Tensión de la correa del ventilador.</li>
+    <li>Nivel de aceite de la dirección hidráulica.</li>
+    <li>Estado de las bujías y cables de alta tensión.</li>
+    <li>Nivel de refrigerante y estado del radiador.</li>
+    <li>Alineación y balanceo de ruedas.</li>
+    <li>Estado de rótulas, amortiguadores y resortes de suspensión.</li>
+    <li>Rotación de neumáticos (cada 10.000 a 15.000 km).</li>
+    <li>Fecha de vencimiento del extintor.</li>
+    <li>Sistema de frenos completo.</li>
+  </ul>
+
+  <div class="callout callout-danger">
+    <span class="callout-label">🚨 Carrocería y protecciones</span>
+    Evitar el uso de defensas metálicas rígidas ("mataburros"): aumentan el riesgo de lesiones mortales a peatones en caso de atropello. Nunca ingresar el vehículo a la playa: la arena y la salinidad aceleran drásticamente la corrosión del chasis.
+  </div>
+</section>
+
+<!-- ════════════════════ TEMA 22 ════════════════════ -->
+<section class="chapter" id="t22">
+  <div class="chapter-header">
+    <div class="chapter-icon" style="background:#fde8e7">🔧</div>
+    <div>
+      <span class="chapter-num">TEMA 22</span>
+      <h2>Mantenimiento correctivo</h2>
+    </div>
+  </div>
+
+  <p>A diferencia del preventivo, el mantenimiento correctivo se realiza <em>después</em> de que una pieza o sistema ha fallado. Su objetivo es reparar o reemplazar los componentes dañados para devolver el vehículo a condiciones óptimas de funcionamiento.</p>
+
+  <div class="callout callout-danger">
+    <span class="callout-label">🚨 Ignorar las fallas es peligroso</span>
+    Posponer la corrección de averías aumenta el riesgo de accidente y puede transformar una reparación menor en un daño mayor y más costoso. Ante la menor sospecha de falla mecánica, llevar el vehículo a un taller especializado de forma inmediata.
+  </div>
+
+  <h3>Principios del mantenimiento correctivo</h3>
+  <ul class="ul-styled">
+    <li>Algunas tareas muy sencillas pueden realizarlas los propietarios, pero las reparaciones profundas del motor, transmisión o frenos requieren herramientas, escáneres y equipos especializados.</li>
+    <li>Nunca economizar en repuestos de mala calidad. Las piezas de dudosa procedencia pueden causar fallas peores en el futuro y comprometer la seguridad.</li>
+    <li>Invertir en repuestos confiables protege el valor del vehículo y la vida de los ocupantes.</li>
+    <li>La regla de oro: ante cualquier falla detectada, llevar el vehículo a un taller autorizado de manera inmediata.</li>
+  </ul>
+</section>
+
+<!-- ════════════════════ TEMA 23 ════════════════════ -->
+<section class="chapter" id="t23">
+  <div class="chapter-header">
+    <div class="chapter-icon" style="background:#fef3cd">🔄</div>
+    <div>
+      <span class="chapter-num">TEMA 23</span>
+      <h2>Maniobras al conducir</h2>
+    </div>
+  </div>
+
+  <h3>Preparación antes de arrancar</h3>
+  <ol class="step-list">
+    <li>Acomodar el asiento para alcanzar los pedales con piernas ligeramente flexionadas.</li>
+    <li>Ajustar el apoyacabezas a la altura de la nuca.</li>
+    <li>Revisar y ajustar los tres espejos retrovisores.</li>
+    <li>Abrochar el cinturón de seguridad — todos los ocupantes, incluidos los traseros.</li>
+    <li>Posicionar las manos en el volante: "10 y 10" o "9 y 15".</li>
+  </ol>
+
+  <h3>Ingreso al flujo vehicular</h3>
+  <p>Al salir de un garaje o estacionamiento perpendicular: dar prioridad absoluta a peatones y ciclistas en la acera o ciclovía. Al salir paralelo a la calle: revisar espejos y girar la cabeza para verificar el ángulo muerto. Ajustar la velocidad al flujo existente para no obligar a los vehículos traseros a frenar bruscamente.</p>
+
+  <h3>Adelantamiento</h3>
+  <div class="callout callout-danger">
+    <span class="callout-label">🚨 Lugares donde está PROHIBIDO adelantar</span>
+    Puentes · Túneles · Cruces de ferrocarril · Pasos a desnivel · Curvas con visibilidad reducida · Intersecciones y rotondas · Línea continua amarilla o doble línea amarilla · Frente a paso peatonal con vehículo detenido · Por el espaldón o costado derecho · Frente a filas de vehículos de carga o autobuses
+  </div>
+
+  <p>Procedimiento correcto: verificar línea discontinua → evaluar espacio libre en sentido contrario → activar direccional izquierdo → acelerar para rebasar rápidamente → mantener mínimo 1,50 m de distancia lateral al pasar junto a ciclistas o motociclistas → activar direccional derecho y confirmar por retrovisor antes de reincorporarse.</p>
+
+  <h3>Marcha atrás (reversa)</h3>
+  <ul class="ul-styled">
+    <li>Activar primero las luces de emergencia.</li>
+    <li>Velocidad máxima: <strong>20 km/h</strong>.</li>
+    <li>Distancia máxima permitida: <strong>50 metros</strong>.</li>
+    <li>Prohibido en curvas, autopistas, carreteras de alta velocidad y túneles.</li>
+  </ul>
+
+  <h3>Técnicas de frenado</h3>
+  <div class="two-col">
+    <div class="col-box">
+      <h4>En bajadas prolongadas</h4>
+      <p style="font-size:.85rem">Usar marchas bajas (1.ª o 2.ª) para aprovechar la compresión del motor. No abusar del pedal de freno para evitar que se sobrecaliente y falle. Si hay olor a quemado: parar y dejar enfriar el sistema.</p>
+    </div>
+    <div class="col-box">
+      <h4>En lluvia o asfalto mojado</h4>
+      <p style="font-size:.85rem">Frenar de forma anticipada, suave y gradual. Aumentar significativamente la distancia de seguridad con el vehículo de adelante.</p>
+    </div>
+    <div class="col-box">
+      <h4>Frenada de emergencia con ABS</h4>
+      <p style="font-size:.85rem">Pisar el pedal a fondo de un solo golpe y mantenerlo. El ABS regula el frenado automáticamente y permite seguir dirigiendo el vehículo para esquivar el obstáculo.</p>
+    </div>
+    <div class="col-box">
+      <h4>Al entrar en curvas</h4>
+      <p style="font-size:.85rem">La regla de oro: frenar <strong>antes</strong> de ingresar a la curva. Frenar dentro de la curva desestabiliza el vehículo, puede causar derrape e invasión del carril contrario.</p>
+    </div>
+  </div>
+
+  <h3>Maniobras en autopistas</h3>
+  <p>Para incorporarse: usar el carril de aceleración para igualar la velocidad del flujo antes de integrarse. Mantener el carril derecho si se va a la velocidad mínima. El carril izquierdo es solo para adelantar. Nunca detenerse en un carril activo; el espaldón solo es para emergencias mecánicas extremas.</p>
+</section>
+
+<!-- ════════════════════ TEMA 24 ════════════════════ -->
+<section class="chapter" id="t24">
+  <div class="chapter-header">
+    <div class="chapter-icon" style="background:#ddeaf9">🚗</div>
+    <div>
+      <span class="chapter-num">TEMA 24</span>
+      <h2>La conducción en la vía</h2>
+    </div>
+  </div>
+
+  <h3>Intersecciones y prioridades</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Situación</th><th>Regla</th></tr></thead>
+      <tbody>
+        <tr><td>Sin señalización</td><td>Ceder al vehículo que viene por la derecha</td></tr>
+        <tr><td>Señal de ALTO</td><td>Detención completa (0 km/h) antes de la línea de parada; avanzar solo cuando la vía esté despejada</td></tr>
+        <tr><td>Señal de CEDA</td><td>Reducir al mínimo; detenerse solo si se aproximan vehículos o peatones con derecho de vía</td></tr>
+        <tr><td>Giro a la derecha en luz roja</td><td>Legal si no hay señal que lo prohíba, siempre que se haya detenido completamente y se ceda el paso a peatones y vehículos</td></tr>
+        <tr><td>Entre las 22:00 y las 5:00</td><td>En algunas intersecciones con semáforo en intermitencia se puede continuar si la vía y los cruces peatonales están despejados</td></tr>
+        <tr><td>Caja amarilla</td><td>Nunca ingresar a la intersección si no hay espacio para salir de ella aunque el semáforo esté en verde</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Rotondas</h3>
+  <div class="hi-box">
+    <h3>Reglas de circulación en rotondas</h3>
+    <ul>
+      <li>Velocidad máxima dentro: <strong>30 km/h</strong>.</li>
+      <li>Los vehículos que ya circulan dentro tienen <strong>prioridad absoluta</strong>.</li>
+      <li>1.ª o 2.ª salida → ingresar por carril exterior (derecho).</li>
+      <li>3.ª salida en adelante (incluyendo giro en U) → ingresar por carril interior (izquierdo).</li>
+      <li>Usar las direccionales al cambiar de carril y al salir.</li>
+      <li>Prohibido adelantar dentro de la rotonda.</li>
+    </ul>
+  </div>
+
+  <h3>Puentes y túneles</h3>
+  <p>En estas estructuras está prohibido: adelantar, detenerse sin causa, frenar de golpe, girar en U. Dentro de los túneles: velocidad máxima de <strong>30 km/h</strong> y luces encendidas obligatoriamente. Si el vehículo sufre una avería: activar luces intermitentes, colocar triángulos a 90 metros y ponerse el chaleco reflectivo. Salir del vehículo solo si es completamente seguro.</p>
+
+  <h3>Circulación en curvas</h3>
+  <p>La <strong>fuerza centrífuga</strong> tiende a sacar al vehículo de la trayectoria curva. El <strong>peralte</strong> (inclinación del borde exterior de la curva) contrarresta parcialmente esa fuerza, pero no la elimina. La acción correcta es siempre: reducir la velocidad antes de entrar a la curva, no frenar bruscamente dentro de ella, y mantener las manos en posición "9 y 15" o "10 y 10" para corregir la dirección con precisión.</p>
+</section>
+
+<!-- ════════════════════ TEMA 25 ════════════════════ -->
+<section class="chapter" id="t25">
+  <div class="chapter-header">
+    <div class="chapter-icon" style="background:#d5ede0">🅿️</div>
+    <div>
+      <span class="chapter-num">TEMA 25</span>
+      <h2>Detención o finalización del viaje</h2>
+    </div>
+  </div>
+
+  <h3>Procedimiento seguro para detenerse</h3>
+  <ol class="step-list">
+    <li>Revisar los espejos para asegurarse de que no haya vehículos demasiado cerca detrás.</li>
+    <li>Activar las luces de emergencia con suficiente antelación.</li>
+    <li>Orillarse hacia el extremo derecho de la vía (espaldón o cuneta).</li>
+    <li>Al bajarse, verificar por los retrovisores y mirar hacia atrás antes de abrir la puerta.</li>
+  </ol>
+
+  <h3>Protocolo ante falla mecánica</h3>
+  <ol class="step-list">
+    <li>Apagar el motor y colocarse el chaleco reflectante.</li>
+    <li>Colocar los triángulos de seguridad a la distancia reglamentaria (delante: 15 m; detrás: 90 m).</li>
+    <li>Permanecer fuera del vehículo pero en zona alejada del flujo vehicular.</li>
+    <li>Si se debe esperar dentro del vehículo, todos deben mantener el cinturón abrochado.</li>
+    <li>En condiciones de poca visibilidad o noche: mantener las luces bajas encendidas aunque el motor esté apagado.</li>
+  </ol>
+
+  <h3>Estacionamiento</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Regla</th><th>Detalle</th></tr></thead>
+      <tbody>
+        <tr><td>Distancia a la acera</td><td>Máximo <strong>30 cm</strong> del borde</td></tr>
+        <tr><td>Cerca de hidrante o paso peatonal</td><td>Prohibido a menos de <strong>5 metros</strong></td></tr>
+        <tr><td>Cerca de intersección urbana</td><td>Prohibido a menos de <strong>10 metros</strong></td></tr>
+        <tr><td>Cerca de intersección en carretera</td><td>Prohibido a menos de <strong>25 metros</strong></td></tr>
+        <tr><td>Borde amarillo</td><td>Estacionamiento totalmente prohibido</td></tr>
+        <tr><td>Pendiente subida (manual)</td><td>Dejar en primera marcha + freno de mano</td></tr>
+        <tr><td>Pendiente bajada (manual)</td><td>Dejar en reversa + freno de mano</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout callout-danger">
+    <span class="callout-label">🚨 Lugares donde siempre está prohibido estacionar</span>
+    Entradas y salidas de clínicas, hospitales, bomberos, Cruz Roja o garajes privados · Zonas peatonales · Sobre ciclovías o paradas de autobús · Curvas, puentes, túneles o pasos elevados · Espacios de personas con discapacidad (sin identificación autorizada) · Sobre carriles activos del flujo vehicular
+  </div>
+</section>
+
+<!-- ════════════════════ TEMA 26 ════════════════════ -->
+<section class="chapter" id="t26">
+  <div class="chapter-header">
+    <div class="chapter-icon" style="background:#fde8e7">⚡</div>
+    <div>
+      <span class="chapter-num">TEMA 26</span>
+      <h2>Los peligros en la vía</h2>
+    </div>
+  </div>
+
+  <h3>Conducción con condiciones climáticas adversas</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Condición</th><th>Acción correcta</th><th>Prohibición</th></tr></thead>
+      <tbody>
+        <tr><td>Sol de frente (amanecer / atardecer)</td><td>Reducir velocidad · Usar visera o lentes oscuros · Mantener limpio el parabrisas</td><td>No dejar la visera cubriendo el área de barrido de las escobillas</td></tr>
+        <tr><td>Viento lateral fuerte</td><td>Aferrar el volante firmemente · Reducir velocidad · Anticipar turbulencia al cruzarse con vehículos grandes</td><td>—</td></tr>
+        <tr><td>Humo y polvo</td><td>Cerrar ventanas · Activar recirculación de aire · Encender luces de cruce · Reducir velocidad</td><td>Si visibilidad es nula: detener el vehículo fuera de la calzada con luces de emergencia</td></tr>
+        <tr><td>Lluvia intensa y neblina</td><td>Encender luces bajas · Reducir velocidad · Aumentar distancia de seguridad · Usar desempañador</td><td>No usar luces altas (encandila) · No usar intermitentes salvo emergencia</td></tr>
+        <tr><td>Hidroplaneamiento</td><td>Soltar el acelerador suavemente · No frenar bruscamente · Sujetar el volante con firmeza</td><td>Evitar charcos y curvas a velocidad normal</td></tr>
+        <tr><td>Inundaciones</td><td>No cruzar si el agua supera la mitad de las llantas · Primera marcha a baja velocidad · Secar los frenos al salir</td><td>No continuar si la corriente es fuerte</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Peligros urbanos y rurales</h3>
+  <div class="two-col">
+    <div class="col-box">
+      <h4>Zonas urbanas y residenciales</h4>
+      <ul style="font-size:.82rem;padding-left:1.1rem">
+        <li>Reducir significativamente la velocidad.</li>
+        <li>Atención máxima a ciclistas y peatones.</li>
+        <li>Los niños pueden aparecer repentinamente en la vía.</li>
+        <li>Respetar las "cajas amarillas" en intersecciones congestionadas.</li>
+      </ul>
+    </div>
+    <div class="col-box">
+      <h4>Carreteras rurales</h4>
+      <ul style="font-size:.82rem;padding-left:1.1rem">
+        <li>Peatones y ciclistas en el borde de la vía sin aceras.</li>
+        <li>Cruce inesperado de animales de granja y fauna silvestre.</li>
+        <li>Reducir velocidad al ver señal preventiva de cruce de animales.</li>
+        <li>Vigilar huecos, rocas y objetos caídos en la calzada.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ TEMA 27 ════════════════════ -->
+<section class="chapter" id="t27">
+  <div class="chapter-header">
+    <div class="chapter-icon" style="background:#ddeaf9">🧘</div>
+    <div>
+      <span class="chapter-num">TEMA 27</span>
+      <h2>Las exigencias de la conducción</h2>
+    </div>
+  </div>
+
+  <p>Conducir no es una actividad automática. Exige el funcionamiento coordinado de habilidades físicas, técnicas y emocionales. Cualquier fallo en alguna de estas dimensiones incrementa el riesgo de accidente.</p>
+
+  <h3>Exigencias físicas y médicas</h3>
+  <p>Condiciones crónicas como diabetes, problemas cardíacos o musculares, e incluso una gripe en mal momento, pueden afectar significativamente la capacidad de reacción y el control del vehículo. Si se tienen padecimientos de salud, se debe consultar con un médico antes de conducir y nunca manejar si no se están tomando los medicamentos necesarios.</p>
+
+  <h3>Estabilidad emocional</h3>
+  <p>El estrés intenso, la ira profunda o la euforia desmedida actúan como distractores severos. Cualquiera de estas emociones puede nublar el juicio y derivar en maniobras imprudentes o agresivas. Cuando se experimenta un estado emocional alterado, la medida correcta es <strong>ceder el volante a otra persona o detenerse hasta recuperar la serenidad</strong>.</p>
+
+  <h3>Señales de estrés o frustración al volante</h3>
+  <ul class="ul-styled">
+    <li>Uso excesivo de la bocina, acelerones agresivos o frenos bruscos.</li>
+    <li>Cambios de carril constantes sin señalizar.</li>
+    <li>Tendencia a "competir" o aumentar la velocidad sin justificación.</li>
+    <li>Irritabilidad ante las maniobras de otros conductores.</li>
+    <li>Conducir hablando por teléfono, comiendo o distraído con asuntos personales.</li>
+  </ul>
+
+  <h3>Técnicas para recuperar la calma</h3>
+  <div class="two-col">
+    <div class="col-box">
+      <h4>Respiración y relajación</h4>
+      <p style="font-size:.82rem">Inhalar y exhalar profundamente varias veces, o contar hasta diez. Estas técnicas reducen la activación fisiológica y ayudan a recuperar el control.</p>
+    </div>
+    <div class="col-box">
+      <h4>Pausas activas</h4>
+      <p style="font-size:.82rem">En trayectos largos, detenerse cada dos horas en lugar seguro, estirar las piernas, hidratarse y respirar aire fresco.</p>
+    </div>
+    <div class="col-box">
+      <h4>Planificación y flexibilidad</h4>
+      <p style="font-size:.82rem">Salir con tiempo suficiente para evitar la sensación de urgencia. Aceptar que el tráfico puede ser lento reduce la agresividad.</p>
+    </div>
+    <div class="col-box">
+      <h4>Cortesía activa</h4>
+      <p style="font-size:.82rem">Ceder el paso, respetar los espacios y evitar cambios bruscos de carril crea un ambiente más amigable y reduce el estrés de todos.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ TEMA 28 ════════════════════ -->
+<section class="chapter" id="t28">
+  <div class="chapter-header">
+    <div class="chapter-icon" style="background:#d5ede0">🛡</div>
+    <div>
+      <span class="chapter-num">TEMA 28</span>
+      <h2>Sistemas de protección y seguridad pasiva</h2>
+    </div>
+  </div>
+
+  <p>La seguridad pasiva comprende todos los dispositivos del vehículo que se activan <em>automáticamente</em> en el momento del accidente para proteger a los ocupantes, sin que el conductor tenga que hacer nada.</p>
+
+  <h3>El cinturón de seguridad</h3>
+  <p>Es el dispositivo de seguridad más importante. Detiene el cuerpo del ocupante en el mismo instante en que el vehículo se detiene bruscamente. El cinturón de tres puntos debe pasar por el hombro, la clavícula y sobre los huesos de la pelvis, siempre ajustado sin dobleces. Es obligatorio para <strong>todos los ocupantes</strong>, incluidos los asientos traseros.</p>
+
+  <div class="callout callout-tip">
+    <span class="callout-label">✅ Cinturón en mujeres embarazadas</span>
+    Siempre debe usarse. La banda inferior debe colocarse por debajo del abdomen (no sobre él). La banda superior debe cruzar el torso entre los pechos. En etapas avanzadas del embarazo se puede usar un soporte adicional para reducir la presión sobre el abdomen.
+  </div>
+
+  <h3>Airbag (bolsa de aire)</h3>
+  <p>Se infla de forma automática y veloz durante un impacto frontal severo para evitar que los ocupantes golpeen contra el volante, tablero u otras partes internas. Es un <strong>complemento del cinturón, nunca un sustituto</strong>. El airbag puede ser peligroso para niños menores de 13 años en el asiento delantero.</p>
+
+  <h3>Apoyacabezas</h3>
+  <p>Previene el peligroso "latigazo cervical" en impactos traseros. Debe ajustarse de modo que su parte central quede a la altura de la nuca o parte superior de la cabeza.</p>
+
+  <h3>Sistemas de Retención Infantil (SRI)</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Tipo de SRI</th><th>Uso</th><th>Posición</th></tr></thead>
+      <tbody>
+        <tr><td>Portabebé</td><td>Desde el nacimiento hasta ≈ 1 año / hasta 13 kg</td><td>Viendo hacia atrás (protege cabeza, cuello y columna)</td></tr>
+        <tr><td>Silla infantil</td><td>Hasta que supera los límites del portabebé</td><td>Viendo hacia el frente, con arnés propio</td></tr>
+        <tr><td>Asiento con respaldar</td><td>Niños mayores; usa el cinturón del vehículo</td><td>Ofrece protección lateral y guía el cinturón por la clavícula</td></tr>
+        <tr><td>Booster (sin respaldar)</td><td>Niños más grandes; eleva para que el cinturón pase correctamente</td><td>El cinturón debe pasar por hombro y pelvis, no por el cuello</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout callout-danger">
+    <span class="callout-label">🚨 SRI obligatorio</span>
+    Niños menores de 12 años que midan menos de 1,45 metros deben usar SRI adecuado. No hacerlo constituye una infracción de categoría B (4 puntos). Los menores de 13 años no deben ir en el asiento delantero si el airbag está activo.
+  </div>
+
+  <h3>Chasis y carrocería</h3>
+  <p>La <strong>carrocería</strong> está diseñada para deformarse de forma controlada en una colisión, disipando la energía del impacto antes de que llegue a los ocupantes. El <strong>chasis</strong> actúa como una "jaula de seguridad" de material más rígido que mantiene el espacio vital de los pasajeros intacto. Los cristales de seguridad se rompen en pequeños fragmentos sin filo para evitar cortaduras profundas.</p>
+</section>
+
+<!-- ════════════════════ TEMA 29 ════════════════════ -->
+<section class="chapter" id="t29">
+  <div class="chapter-header">
+    <div class="chapter-icon" style="background:#fde8e7">⚠️</div>
+    <div>
+      <span class="chapter-num">TEMA 29</span>
+      <h2>Factores de riesgo en los accidentes</h2>
+    </div>
+  </div>
+
+  <h3>Objetos sueltos dentro del vehículo</h3>
+  <p>En una frenada brusca o colisión, la inercia convierte cualquier objeto suelto en un proyectil que puede multiplicar su peso hasta <strong>50 veces</strong>. El equipaje debe ir siempre en el maletero; nada suelto en el habitáculo.</p>
+
+  <h3>Distracciones tecnológicas</h3>
+  <div class="callout callout-danger">
+    <span class="callout-label">🚨 El celular es la principal causa de accidentes mortales por distracción</span>
+    Escribir mensajes, revisar redes sociales o contestar llamadas mientras se conduce provoca pérdida de visión de la vía, invasión de carril y frenos bruscos de pánico. El GPS debe programarse antes de arrancar, nunca mientras se conduce.
+  </div>
+
+  <h3>Consumo de alcohol, drogas y medicamentos</h3>
+  <p>El alcohol y otras sustancias alteran el sistema nervioso central, deteriorando la percepción del espacio y el tiempo, generando falsa sensación de seguridad y destruyendo el tiempo de reacción. Muchos medicamentos de uso común (para el resfriado, las alergias o el dolor) también pueden causar somnolencia, visión borrosa o vértigo. <strong>Siempre revisar el prospecto antes de conducir.</strong></p>
+
+  <h3>Fatiga y somnolencia</h3>
+  <p>La fatiga reduce drásticamente la atención, los reflejos y la coordinación muscular. Es un enemigo silencioso porque a menudo no se percibe hasta que es demasiado tarde. La recomendación: descansar al menos 7-8 horas antes de un viaje largo y hacer pausas cada dos horas.</p>
+
+  <h3>Edad y experiencia</h3>
+  <div class="two-col">
+    <div class="col-box">
+      <h4>Conductores jóvenes / novatos</h4>
+      <p style="font-size:.82rem">Tendencia a sobrevalorar las habilidades propias. Mayor propensión a la velocidad excesiva, la competencia y la presión de grupo para violar normas.</p>
+    </div>
+    <div class="col-box">
+      <h4>Conductores adultos mayores</h4>
+      <p style="font-size:.82rem">Disminución gradual de la visión, la audición, la fuerza muscular y la velocidad de reflejos. Deben identificar sus propios límites y adaptarse a ellos.</p>
+    </div>
+  </div>
+
+  <h3>Modificaciones no autorizadas y exceso de carga</h3>
+  <p>Alteraciones en la suspensión, frenos o motor sin homologación del fabricante comprometen la seguridad estructural del vehículo. El exceso de carga desbalancea el peso, aumenta la distancia de frenado y puede provocar fallos mecánicos en las llantas y la suspensión.</p>
+
+  <h3>El círculo de seguridad</h3>
+  <p>Conjunto de hábitos de revisión antes del viaje que aseguran que tanto el conductor como el vehículo están en condiciones óptimas para circular. Incluye: revisar el estado físico y emocional propio, verificar los niveles de aceite, refrigerante y combustible, comprobar el estado de los frenos y llantas, asegurarse de tener extintor, triángulos y chaleco reflectivo.</p>
+</section>
+
+<!-- ════════════════════ TEMA 30 ════════════════════ -->
+<section class="chapter" id="t30">
+  <div class="chapter-header">
+    <div class="chapter-icon" style="background:#fde8e7">🚑</div>
+    <div>
+      <span class="chapter-num">TEMA 30</span>
+      <h2>Comportamiento ante un accidente</h2>
+    </div>
+  </div>
+
+  <p>Ninguna persona está completamente exenta de verse involucrada en un accidente. La regla de oro ante cualquier siniestro es mantener la calma y seguir un protocolo ordenado.</p>
+
+  <h3>Pasos inmediatos tras una colisión (daños materiales)</h3>
+  <ol class="step-list">
+    <li>Apagar el motor, accionar el freno de mano y encender las luces de emergencia.</li>
+    <li>Colocarse el chaleco reflectante antes de salir del vehículo.</li>
+    <li>Verificar que no exista riesgo de incendio o precipitación.</li>
+    <li>Colocar los triángulos de seguridad a la distancia reglamentaria.</li>
+    <li>Tomar fotografías detalladas de los vehículos, la vía y los daños.</li>
+    <li>Recopilar datos de testigos y de los involucrados (nombre, cédula, licencia, placa, aseguradora).</li>
+    <li>Si hay acuerdo entre partes: completar el formulario DAM.</li>
+    <li>Si no hay acuerdo: no mover los vehículos y llamar al 9-1-1.</li>
+  </ol>
+
+  <h3>Ante un accidente con víctimas</h3>
+  <ol class="step-list">
+    <li>Llamar al <strong>9-1-1</strong> de inmediato. Indicar: tipo de accidente, ubicación exacta (con puntos de referencia), número de personas heridas, presencia de menores, si están conscientes o atrapados.</li>
+    <li>No mover a los heridos a menos que exista peligro inmediato (fuego, riesgo de otro choque).</li>
+    <li>Si se está capacitado: aplicar primeros auxilios básicos (RCP, control de hemorragias).</li>
+    <li>Si no se está capacitado: hablarle a la víctima con calma para mantenerla tranquila mientras llega la ayuda.</li>
+    <li>Nunca retirar el casco a un motociclista lesionado.</li>
+  </ol>
+
+  <div class="callout callout-danger">
+    <span class="callout-label">🚨 Está terminantemente prohibido</span>
+    Fotografiar o grabar videos de las personas heridas. Abandonar el lugar del accidente cuando hay heridos (es un delito penal). Mover a los heridos de forma incorrecta (puede agravar lesiones en columna o cuello).
+  </div>
+
+  <h3>Colocación correcta de triángulos y uso del extintor</h3>
+  <div class="two-col">
+    <div class="col-box">
+      <h4>Triángulos de seguridad</h4>
+      <ul style="font-size:.82rem;padding-left:1.1rem">
+        <li>Uno adelante del vehículo, a 15 m, sobre la línea divisoria de carriles.</li>
+        <li>Uno detrás, a 90 m (si es después de una curva, colocarlo antes de la curva).</li>
+      </ul>
+    </div>
+    <div class="col-box">
+      <h4>Extintor (2 kg en vehículos livianos)</h4>
+      <ul style="font-size:.82rem;padding-left:1.1rem">
+        <li>Retirar el pasador de seguridad.</li>
+        <li>Apuntar a la base de las llamas en ángulo de 45°.</li>
+        <li>Descargas cortas y precisas; no vaciar de golpe.</li>
+        <li>Si el fuego involucra el motor o combustible: alejarse y llamar al 9-1-1.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Implementos obligatorios en el vehículo</h3>
+  <ul class="ul-styled">
+    <li>Al menos dos triángulos de seguridad (o dispositivos análogos).</li>
+    <li>Extintor vigente (2 kg para vehículos livianos; 5 kg para pesados).</li>
+    <li>Chaleco reflectante.</li>
+    <li>Llanta de repuesto, gata y herramientas para cambiarla.</li>
+    <li>Lámpara de mano.</li>
+  </ul>
+</section>
+
+<!-- ════════════════════ TEMA 31 ════════════════════ -->
+<section class="chapter" id="t31">
+  <div class="chapter-header">
+    <div class="chapter-icon" style="background:#dce8ff">⚖️</div>
+    <div>
+      <span class="chapter-num">TEMA 31</span>
+      <h2>Generalidades de las leyes de movilidad</h2>
+    </div>
+  </div>
+
+  <p>El marco legal costarricense en materia de tránsito y movilidad se apoya en tres normativas principales que se complementan entre sí.</p>
+
+  <h3>Las tres leyes fundamentales</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Ley</th><th>Enfoque principal</th><th>Punto destacado</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Ley de Tránsito por Vías Públicas Terrestres y Seguridad Vial (N.° 9078)</strong></td><td>Rige vehículos, conductores, peatones, ciclistas y el señalamiento vial</td><td>Establece el sistema de multas, puntos, suspensiones y sanciones penales</td></tr>
+        <tr><td><strong>Ley de Movilidad y Seguridad Ciclista</strong></td><td>Reconoce a la bicicleta como vehículo</td><td>Art. 108: el conductor debe apartarse al extremo derecho al rebasar a un ciclista (1,50 m mínimo). El ciclista puede circular por el centro del carril.</td></tr>
+        <tr><td><strong>Ley de Movilidad Peatonal</strong></td><td>Prioriza a las personas que caminan</td><td>Obliga al MOPT y municipalidades a construir aceras según la Ley 7600 (discapacidad); prohíbe obstáculos en aceras.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Sistema de faltas y puntos — Categorías</h3>
+  <div class="infraction-block inf-A">
+    <span class="inf-label" style="color:var(--accent)">Categoría A — 6 puntos · multa actualizable</span>
+    <ul style="font-size:.87rem;padding-left:1.1rem">
+      <li>Alcohol en sangre: más de 0,50 g/l (general) o más de 0,20 g/l (novatos y profesionales).</li>
+      <li>Velocidad superior a 120 km/h en vías públicas.</li>
+      <li>Adelantar en curvas, intersecciones, cruces de ferrocarril, puentes, túneles o pasos a desnivel.</li>
+      <li>Conducir con licencia suspendida.</li>
+      <li>Negarse a la prueba de alcoholimetría (equivale a positivo).</li>
+      <li>Invasión de carril con línea de barrera continua.</li>
+    </ul>
+  </div>
+
+  <div class="infraction-block inf-B">
+    <span class="inf-label" style="color:var(--gold)">Categoría B — 4 puntos · multa actualizable</span>
+    <ul style="font-size:.87rem;padding-left:1.1rem">
+      <li>Menores de 12 años (menos de 1,45 m) sin SRI adecuado.</li>
+      <li>Irrespetar la señal de ALTO o la luz roja del semáforo.</li>
+      <li>Circular con placas ajenas, falsas o adulteradas.</li>
+      <li>Superar el límite de velocidad en más de 40 km/h.</li>
+    </ul>
+  </div>
+
+  <div class="infraction-block inf-C">
+    <span class="inf-label" style="color:var(--accent-2)">Categoría C — multa, sin acumulación de puntos</span>
+    <p style="font-size:.87rem">No utilizar el cinturón de seguridad, conducir una motocicleta sin casco y otras conductas previstas en el artículo 145 de la Ley 9078.</p>
+  </div>
+
+  <div class="infraction-block inf-D">
+    <span class="inf-label" style="color:var(--accent-3)">Categoría D — multa, sin acumulación de puntos</span>
+    <ul style="font-size:.87rem;padding-left:1.1rem">
+      <li>Reversa de más de 50 metros.</li>
+      <li>Placas mal colocadas o en ubicación incorrecta.</li>
+    </ul>
+  </div>
+
+  <div class="infraction-block inf-E">
+    <span class="inf-label" style="color:#666">Categoría E — multa, sin acumulación de puntos</span>
+    <ul style="font-size:.87rem;padding-left:1.1rem">
+      <li>Reducir la velocidad solo para observar un accidente ("efecto mirón").</li>
+      <li>Bloquear una intersección congestionada.</li>
+    </ul>
+  </div>
+
+  <h3>Otras prohibiciones relevantes</h3>
+  <ul class="ul-styled">
+    <li>Llevar pasajeros en la cajuela o cajón (excepción: actividades agrícolas, servicios públicos, emergencias o carreteras cantonales de lastre).</li>
+    <li>Uso del celular sin manos libres.</li>
+    <li>No usar el cinturón de seguridad (conductor o pasajeros).</li>
+    <li>No ceder el paso a peatones en cruces señalizados.</li>
+    <li>Superar los 25 km/h cerca de escuelas con estudiantes, hospitales o eventos masivos.</li>
+    <li>Conducir sin las luces reglamentarias de 6:00 p.m. a 6:00 a.m.</li>
+  </ul>
+
+  <h3>Sanciones penales (cárcel)</h3>
+  <div class="callout callout-danger">
+    <span class="callout-label">🚨 Conllevan prisión de 1 a 3 años</span>
+    Conducir a más de 150 km/h · Participar en piques o competencias ilegales · Conducir bajo efectos de drogas tóxicas · Alcohol en sangre superior a 0,75 g/l (cualquier conductor) o superior a 0,50 g/l (novatos y profesionales) · Causar la muerte o lesiones graves conduciendo bajo el efecto de sustancias · Abandonar el lugar de un accidente con heridos.
+  </div>
+
+  <h3>Actualización de multas y destino de los fondos</h3>
+  <p>Los montos de las multas se actualizan periódicamente. Para estudiar conviene memorizar la <strong>conducta, la categoría y si acumula puntos</strong>, no una cifra aproximada que puede quedar desactualizada. Solo las categorías A y B acumulan puntos.</p>
+
+  <div class="callout callout-info">
+    <span class="callout-label">ℹ Descuento y recuperación de puntos</span>
+    Un conductor puede descontar la mitad de los puntos acumulados mediante trabajo comunitario o un curso de educación vial. Si se llega al máximo de puntos: suspensión de un año (primera vez). Si se pierde la licencia por trabajo, el período puede reducirse a seis meses demostrando necesidad laboral.
+  </div>
+
+  <h3>Plan de estudio V2</h3>
+  <div class="callout callout-info">
+    <span class="callout-label">✅ Método para llegar preparado</span>
+    Estudiá un capítulo, explicalo sin mirar y luego practicá preguntas de ese tema. No avancés hasta lograr al menos 80 % dos veces consecutivas. En el repaso final priorizá señales, prioridades de paso, velocidades, alcohol, maniobras, seguridad pasiva y sanciones A/B. Leé siempre todas las opciones: palabras como <em>siempre</em>, <em>nunca</em>, <em>solo</em> y <em>excepto</em> cambian completamente la respuesta.
+  </div>
+  <p><strong>Fuentes de control:</strong> <a href="https://pgrweb.go.cr/scij/Busqueda/Normativa/Normas/nrm_texto_completo.aspx?nValor1=1&amp;nValor2=73504&amp;nValor3=0&amp;param1=NRTC&amp;strTipM=TC" target="_blank" rel="noopener">Ley de Tránsito 9078 vigente (PGR/SINALEVI)</a> y <a href="https://www.mopt.go.cr/node/1274" target="_blank" rel="noopener">información oficial de los manuales diferenciados 2026 (MOPT)</a>. Este material es una guía de estudio independiente; ante una diferencia, prevalecen el manual oficial vigente y la normativa publicada.</p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  Manual del Conductor V2 · Guía independiente revisada en agosto de 2026 · Costa Rica
+</footer>
+
+</main>
+
+<script>
+// Active link tracking
+const sections = document.querySelectorAll('.chapter');
+const links    = document.querySelectorAll('.sb-link');
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = '#' + entry.target.id;
+      links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === id));
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+
+sections.forEach(s => observer.observe(s));
+
+// Close sidebar on link click (mobile)
+links.forEach(link => {
+  link.addEventListener('click', () => {
+    document.getElementById('sidebar').classList.remove('open');
+  });
+});
+</script>
+</body>
+</html>
